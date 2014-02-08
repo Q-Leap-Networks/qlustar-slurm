@@ -105,7 +105,7 @@ extern char *default_plugstack;
 #  define DEFAULT_LAUNCH_TYPE         "launch/slurm"
 #endif
 
-#define DEFAULT_MAIL_PROG           "/bin/mail"
+#define DEFAULT_MAIL_PROG           "/usr/bin/mail"
 #define DEFAULT_MAX_ARRAY_SIZE      1001
 #define DEFAULT_MAX_JOB_COUNT       10000
 #define DEFAULT_MAX_JOB_ID          0xffff0000

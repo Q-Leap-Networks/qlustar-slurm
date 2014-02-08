@@ -282,7 +282,7 @@ primary slurmctld fails.
 	strigger \-\-set \-\-primary_slurmctld_failure \\
 	         \-\-program=/usr/sbin/primary_slurmctld_failure
 	# Notify the administrator of the failure using by e\-mail
-	/bin/mail slurm_admin@site.com \-s Primary_SLURMCTLD_FAILURE
+	/usr/bin/mail slurm_admin@site.com \-s Primary_SLURMCTLD_FAILURE
 
 	> strigger \-\-set \-\-primary_slurmctld_failure \\
 	           \-\-program=/usr/sbin/primary_slurmctld_failure
@@ -301,7 +301,7 @@ argument to the script by SLURM).
 	strigger \-\-set \-\-node \-\-down \\
 	         \-\-program=/usr/sbin/slurm_admin_notify
 	# Notify administrator using by e\-mail
-	/bin/mail slurm_admin@site.com \-s NodesDown:$*
+	/usr/bin/mail slurm_admin@site.com \-s NodesDown:$*
 
 	> strigger \-\-set \-\-node \-\-down \\
 	           \-\-program=/usr/sbin/slurm_admin_notify

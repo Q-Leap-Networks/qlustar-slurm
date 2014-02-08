@@ -152,7 +152,7 @@ function displayfile()
    "#KillOnBadExit=0 <br>" +
    "#LaunchType=launch/slurm <br>" +
    "#Licenses=foo*4,bar <br>" +
-   "#MailProg=/bin/mail <br>" +
+   "#MailProg=/usr/bin/mail <br>" +
    "#MaxJobCount=5000 <br>" +
    "#MaxStepCount=40000 <br>" +
    "#MaxTasksPerNode=128 <br>" +

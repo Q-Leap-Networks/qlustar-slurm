@@ -1,0 +1,54 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+DEBVENDOR  := $(shell dpkg-vendor --query Vendor)
+
+ifeq ($(DEBVENDOR), Qlustar)
+    # Qlustar specific stuff
+    include /usr/share/ql-deb-utils/Makefile
+endif
+
+# include defs of all DEB_HOST_*/DEB_BUILD_* vars
+include /usr/share/dpkg/architecture.mk
+
+PAMDIR=/lib/$(DEB_HOST_MULTIARCH)/security
+
+export PERL_ARCHLIB := $(shell perl -MConfig -e \
+  'print substr($$Config{vendorarch}, 1)')
+
+%:
+	dh $@ --parallel
+
+override_dh_auto_configure:
+	dh_auto_configure -- --libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) \
+	  --sysconfdir=/etc/qlustar/common/slurm-llnl \
+	  --localstatedir=/var/run/slurm-llnl --without-rpath \
+	  --with-munge --with-pam_dir=$(PAMDIR) --enable-pam
+
+override_dh_auto_install:
+	dh_auto_install
+
+	# clear dependency_libs field in *.la files
+	# see lintian non-empty-dependency_libs-in-la-file for reference
+	sed -i "/dependency_libs/ s/'.*'/''/" $$(find debian/tmp/ -name '*.la')
+
+	# Handle pam stuff
+	$(MAKE) -C contribs/pam install DESTDIR=$(CURDIR)/debian/tmp
+
+	# Handle libslurm[db]-perl pkgs
+	$(MAKE) -C contribs/perlapi install DESTDIR=$(CURDIR)/debian/tmp \
+	  PERL_MM_OPT="INSTALLDIRS=vendor"
+	find debian/tmp/$(PERL_ARCHLIB) -type f -name "*.so" | xargs chrpath -d
+
+	# Handle slurm-wlm-torque
+	$(MAKE) -C contribs/torque \
+	  install DESTDIR=$(CURDIR)/debian/tmp
+	# build manpages for torque wrappers
+	for i in debian/tmp/usr/bin/pbsnodes debian/tmp/usr/bin/q*; do \
+	  pod2man $$i > debian/tmp/usr/share/man/man1/$$(basename $$i).1; \
+	done
+
+override_dh_auto_test:

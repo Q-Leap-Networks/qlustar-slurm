@@ -1,0 +1,4 @@
+debian/examples/cgroup.conf
+debian/examples/cgroup.release_common
+debian/examples/slurm-resume.sh
+debian/examples/slurm-suspend.sh

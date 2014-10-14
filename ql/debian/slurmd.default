@@ -1,5 +1,5 @@
-# Additional options that are passed to the slurmctld daemon
-#SLURMCTLD_OPTIONS=""
+# Additional options that are passed to the slurmd daemon
+#SLURMD_OPTIONS=""
 
 # Uncomment the following export statements if ControlMachine is not the real
 # hostname of this node but the name of some other IP address.

@@ -15,8 +15,8 @@ Package: slurm-client
 Architecture: any
 Depends:
  ${shlibs:Depends}, ${misc:Depends}, munge, ucf
-Replaces: slurm-llnl (<< 14.03)
-Breaks: slurm-llnl (<< 14.03)
+Replaces: slurm-llnl (<< 14.11)
+Breaks: slurm-llnl (<< 14.11)
 Description: SLURM client side commands
  SLURM stands for Simple Linux Utility for Resource Management, it
  is an open-source cluster resource management and job scheduling system
@@ -29,8 +29,8 @@ Architecture: any
 Depends:
  ${shlibs:Depends}, ${misc:Depends},
  slurm-wlm-basic-plugins (= ${binary:Version}), munge, lsb-base
-Replaces: slurm-llnl (<< 14.03)
-Breaks: slurm-llnl (<< 14.03)
+Replaces: slurm-llnl (<< 14.11)
+Breaks: slurm-llnl (<< 14.11)
 Description: SLURM compute node daemon
  SLURM stands for Simple Linux Utility for Resource Management, it
  is an open-source cluster resource management and job scheduling system
@@ -47,8 +47,8 @@ Depends:
  slurm-wlm-basic-plugins (= ${binary:Version}),
  adduser,
  lsb-base
-Replaces: slurm-llnl (<< 14.03)
-Breaks: slurm-llnl (<< 14.03)
+Replaces: slurm-llnl (<< 14.11)
+Breaks: slurm-llnl (<< 14.11)
 Description: SLURM central management daemon
  SLURM stands for Simple Linux Utility for Resource Management, it
  is an open-source cluster resource management and job scheduling system
@@ -56,7 +56,7 @@ Description: SLURM central management daemon
  interconnect agnostic.
  This package contains the central management demon slurmctld.
 
-Package: libslurmdb27
+Package: libslurmdb28
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
@@ -65,7 +65,7 @@ Description: Runtime library files for the SLURM DataBase Daemon
  is an open-source cluster resource management and job scheduling.
  This package contains the SLURM DataBase Daemon runtime library.
 
-Package: libslurm27
+Package: libslurm28
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
@@ -86,7 +86,7 @@ Description: SLURM PMI library implementation
 Package: libslurm-dev
 Section: libdevel
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libslurm27 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}, libslurm28 (= ${binary:Version})
 Description: SLURM development files
  SLURM, the Simple Linux Utility for Resource Management,
  is an open-source cluster resource management and job scheduling.
@@ -95,7 +95,7 @@ Description: SLURM development files
 Package: libslurmdb-dev
 Section: libdevel
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libslurmdb27 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}, libslurmdb28 (= ${binary:Version})
 Description: SLURM DataBase Daemon development files
  SLURM, the Simple Linux Utility for Resource Management,
  is an open-source cluster resource management and job scheduling.
@@ -105,7 +105,7 @@ Package: libpmi0-dev
 Section: libdevel
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, libpmi0 (= ${binary:Version}),
- libslurm27 (= ${binary:Version})
+ libslurm28 (= ${binary:Version})
 Description: SLURM PMI library implementation development files
  SLURM, the Simple Linux Utility for Resource Management,
  is an open-source cluster resource management and job scheduling.
@@ -118,8 +118,8 @@ Architecture: all
 Depends:
  ${shlibs:Depends},
  ${misc:Depends}
-Replaces: slurm-llnl-doc (<< 14.03)
-Breaks: slurm-llnl-doc (<< 14.03)
+Replaces: slurm-llnl-doc (<< 14.11)
+Breaks: slurm-llnl-doc (<< 14.11)
 Description: SLURM docmentation
  SLURM, the Simple Linux Utility for Resource Management,
  is an open-source cluster resource management and job scheduling.
@@ -130,8 +130,8 @@ Architecture: any
 Depends:
  ${shlibs:Depends},
  ${misc:Depends}
-Replaces: slurm-llnl-basic-plugins (<< 14.03)
-Breaks: slurm-llnl-basic-plugins (<< 14.03)
+Replaces: slurm-llnl-basic-plugins (<< 14.11)
+Breaks: slurm-llnl-basic-plugins (<< 14.11)
 Description: SLURM basic plugins
  SLURM, the Simple Linux Utility for Resource Management,
  is an open-source cluster resource management and job scheduling.
@@ -144,8 +144,8 @@ Depends:
  ${shlibs:Depends},
  ${misc:Depends},
  slurm-wlm-basic-plugins (= ${binary:Version})
-Replaces: slurm-llnl-basic-plugins-dev (<< 14.03)
-Breaks: slurm-llnl-basic-plugins-dev (<< 14.03)
+Replaces: slurm-llnl-basic-plugins-dev (<< 14.11)
+Breaks: slurm-llnl-basic-plugins-dev (<< 14.11)
 Description: SLURM basic plugins development files
  SLURM, the Simple Linux Utility for Resource Management,
  is an open-source cluster resource management and job scheduling.
@@ -157,8 +157,8 @@ Depends:
  ${shlibs:Depends},
  ${misc:Depends},
  slurm-client (= ${binary:Version})
-Replaces: slurm-llnl-sview (<< 14.03)
-Breaks: slurm-llnl-sview (<< 14.03)
+Replaces: slurm-llnl-sview (<< 14.11)
+Breaks: slurm-llnl-sview (<< 14.11)
 Description: GUI to view and modify SLURM state
  SLURM, the Simple Linux Utility for Resource Management,
  is an open-source cluster resource management and job scheduling.
@@ -175,8 +175,8 @@ Depends:
  adduser,
  munge,
  ucf
-Replaces: slurm-llnl-slurmdbd (<< 14.03)
-Breaks: slurm-llnl-slurmdbd (<< 14.03)
+Replaces: slurm-llnl-slurmdbd (<< 14.11)
+Breaks: slurm-llnl-slurmdbd (<< 14.11)
 Description: Secure enterprise-wide interface to a database for SLURM
  SLURM, the Simple Linux Utility for Resource Management,
  is an open-source cluster resource management and job scheduling.
@@ -219,8 +219,8 @@ Depends:
  ${perl:Depends},
  ${misc:Depends},
  slurm-client (>= ${source:Version})
-Replaces: slurm-llnl-torque (<< 14.03)
-Breaks: slurm-llnl-torque (<< 14.03)
+Replaces: slurm-llnl-torque (<< 14.11)
+Breaks: slurm-llnl-torque (<< 14.11)
 Conflicts: gridengine-client, torque-client, torque-client-x11
 Description: Torque compatibility wrappers for SLURM
  SLURM, the Simple Linux Utility for Resource Management,

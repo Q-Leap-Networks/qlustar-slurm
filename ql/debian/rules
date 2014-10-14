@@ -51,6 +51,12 @@ override_dh_auto_install:
 	  pod2man $$i > debian/tmp/usr/share/man/man1/$$(basename $$i).1; \
 	done
 
+	# Qlustar gethostname for HA purposes
+	mkdir -p debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/slurm
+	gcc -fPIC -shared -o \
+	  debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/slurm/gethostname.so \
+	  debian/gethostname.c
+
 override_dh_install:
 	dh_install --list-missing
 

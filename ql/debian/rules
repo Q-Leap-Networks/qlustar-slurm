@@ -51,4 +51,7 @@ override_dh_auto_install:
 	  pod2man $$i > debian/tmp/usr/share/man/man1/$$(basename $$i).1; \
 	done
 
+override_dh_install:
+	dh_install --list-missing
+
 override_dh_auto_test:

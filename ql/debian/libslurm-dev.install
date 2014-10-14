@@ -1,0 +1,5 @@
+usr/lib/*/libslurm*.a
+usr/lib/*/libslurm*.la
+usr/lib/*/libslurm*.so
+usr/share/man/man3/*
+usr/include/slurm/*

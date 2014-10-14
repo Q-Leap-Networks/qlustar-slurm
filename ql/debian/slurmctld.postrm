@@ -30,9 +30,9 @@ case "$1" in
             rm -rf /var/run/slurm-llnl
             if [ ! -e /usr/bin/sinfo ] ; then
 	      if which ucf >/dev/null; then
-	        ucf --purge /etc/slurm-llnl/slurm.conf
+	        ucf --purge /etc/qlustar/common/slurm-llnl/slurm.conf
 	      fi
-              rm -f /etc/slurm-llnl/slurm.conf
+              rm -f /etc/qlustar/common/slurm-llnl/slurm.conf
             fi
          fi
          ;;

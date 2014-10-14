@@ -1,0 +1,8 @@
+# Additional options that are passed to the slurmctld daemon
+#SLURMCTLD_OPTIONS=""
+
+# Uncomment the following export statements if ControlMachine is not the real
+# hostname of this node but the name of some other IP address.
+# Necessary for running slurmctld in HA mode (ControlMachine is a virtual IP then)
+#export LD_PRELOAD=gethostname.so
+#export LD_LIBRARY_PATH=/usr/lib/slurm

@@ -1,0 +1,31 @@
+Description: Increase size of sacctmgr read buffer
+ This patch significantly increases the size of the buffer for reading dumps
+ with sacctmgr load. Without this patch, sacctmgr is not able to handle lines
+ with more than 4096 which is too small in some cases. Also removed useless
+ macro definition in other related file.
+Author: Rémi Palancher <remi@rezib.org>
+Forwarded: http://thread.gmane.org/gmane.comp.distributed.slurm.devel/5483
+Last-Update: 2014-09-15
+
+--- a/src/sacctmgr/sacctmgr.c
++++ b/src/sacctmgr/sacctmgr.c
+@@ -43,8 +43,6 @@
+ #include "src/common/xsignal.h"
+ #include "src/common/proc_args.h"
+ 
+-#define BUFFER_SIZE 4096
+-
+ char *command_name;
+ int exit_code;		/* sacctmgr's exit code, =1 on any error at any time */
+ int exit_flag;		/* program to terminate if =1 */
+--- a/src/sacctmgr/sacctmgr.h
++++ b/src/sacctmgr/sacctmgr.h
+@@ -86,7 +86,7 @@
+ 
+ #define CKPT_WAIT	10
+ #define	MAX_INPUT_FIELDS 128
+-#define BUFFER_SIZE 4096
++#define BUFFER_SIZE 524288
+ 
+ typedef enum {
+ 	/* COMMON */

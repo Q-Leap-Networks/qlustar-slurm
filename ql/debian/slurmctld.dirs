@@ -1,0 +1,3 @@
+var/lib/slurm-llnl/slurmctld
+var/log/slurm-llnl
+etc/qlustar/common/slurm-llnl

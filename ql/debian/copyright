@@ -1,7 +1,8 @@
-This is the Debian GNU/Linux prepackaged version of the slurm program written
-by the authors listed below.
+This package was debianized for Qlustar by Roland Fehrenbacher <rf@q-leap.de>
+Fri, 17 Oct 2014 18:53:53 +0000
 
-This package was put together by by Gennaro Oliva <oliva.g@na.icar.cnr.it> 
+The package is based on the original Debian package that
+was debianized by Gennaro Oliva <oliva.g@na.icar.cnr.it> 
 from the sources available at 
 	ftp://ftp.llnl.gov/pub/linux/slurm/
 
@@ -367,3 +368,6 @@ src/common/log.c and src/common/log.h are licensed as follow:
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 \*****************************************************************************/
 
+
+The Qlustar Debian packaging is Copyright (C) 2014, Q-Leap Networks GmbH and
+is licensed under the GPL, see `/usr/share/common-licenses/GPL'.

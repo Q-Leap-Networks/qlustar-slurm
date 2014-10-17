@@ -1,0 +1,24 @@
+slurm-llnl (14.03.8-1) experimental; urgency=medium
+
+  Since version 14.03.7 many binary packages have been
+  renamed to remove the llnl acronym because the slurm
+  project in not hosted anymore at the Lawrence Livermore
+  National Laboratory. A list of the name changes follows:
+
+  slurm-llnl -> slurm-wlm (slurm-client, slurmd, slurmctld)
+  slurm-llnl-slurdbd -> slurmdbd
+  slurm-llnl-basic-plugins -> slurm-wlm-basic-plugins
+  slurm-llnl-basic-plugins-dev -> slurm-wlm-basic-plugins-dev
+  slurm-llnl-sview -> sview
+  slurm-llnl-doc -> slurm-wlm-doc
+
+  The old slurm-llnl package content have been split in
+  three different packages: slurctld with the central
+  management daemon, slurmd with the compute node daemon and
+  slurm-client with client side commands. The old slurm-llnl
+  package content system can still be obtained by installing
+  the new slurm-wlm metapackage.
+
+  The new slurm-wlm package supports systemd.
+
+ -- Gennaro Oliva <oliva.g@na.icar.cnr.it>  Wed, 01 Oct 2014 00:35:30 +0200

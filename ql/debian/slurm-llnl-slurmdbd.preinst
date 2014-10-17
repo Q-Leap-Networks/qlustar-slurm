@@ -1,5 +1,5 @@
 #!/bin/sh
-# preinst script for munge
+# preinst script for slurm-llnl-slurmdbd
 #
 # see: dh_installdeb(1)
 
@@ -14,32 +14,23 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-
 case "$1" in
     install)
-      if [ $(id -u slurm 2>/dev/null) ]; then
-        SLURMUID=$(id -u slurm 2>/dev/null)
-        SLURMGID=$(id -g slurm 2>/dev/null)
-        if [ "$SLURMUID" != "64030" ] || [ "$SLURMGID" != "64030" ] ; then
-          deluser --quiet slurm
-          adduser --quiet --system --group --uid 64030 --no-create-home slurm
-        fi
-      else
-        adduser --quiet --system --group --uid 64030 --no-create-home slurm
-      fi
     ;;
 
     upgrade)
-      if [ $(id -u slurm 2>/dev/null) ]; then
-        SLURMUID=$(id -u slurm 2>/dev/null)
-        SLURMGID=$(id -g slurm 2>/dev/null)
-        if [ "$SLURMUID" != "64030" ] || [ "$SLURMGID" != "64030" ] ; then
-          deluser --quiet slurm
-          adduser --quiet --system --group --uid 64030 --no-create-home slurm
+
+      #Deleting slurm-llnl-slurmdbd init file if it does not contains user changes
+      if [ -e /etc/init.d/slurm-llnl-slurmdbd ] ; then
+        md5sum="$(md5sum /etc/init.d/slurm-llnl-slurmdbd | sed -e 's/ .*//')"
+        pkg_md5sum="$(dpkg-query -W -f='${Conffiles}' slurm-llnl-slurmdbd | \
+          sed -n -e "\' /etc/init.d/slurm-llnl-slurmdbd ' { s/ obsolete$//; s/.* //; p }")"
+        if [ "$md5sum" = "$pkg_md5sum" ]; then
+            rm -f /etc/init.d/slurm-llnl-surmdbd
         fi
-      else
-        adduser --quiet --system --group --uid 64030 --no-create-home slurm
       fi
+      update-rc.d -f slurm-llnl-slurmdbd remove
+
     ;;
 
     abort-upgrade)
@@ -57,5 +48,3 @@ esac
 #DEBHELPER#
 
 exit 0
-
-

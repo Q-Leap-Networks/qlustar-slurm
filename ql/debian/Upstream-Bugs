@@ -1,2 +1,5 @@
 slurmctld.logrotate
 slurmdbd.logrotate
+slurm-wlm-doc.docs
+
+slurmd missed munge dependency

@@ -1,5 +1,5 @@
 #!/bin/sh
-# postrm script for slurm-llnl-slumrdbd
+# postrm script for slurm-client
 #
 # see: dh_installdeb(1)
 
@@ -20,12 +20,11 @@ set -e
 
 case "$1" in
        purge)
-         if ! dpkg-query -l slurm-llnl \
-              1>/dev/null 2>/dev/null ; then
-
-           if [ -e /etc/default/slurm-llnl ] ; then
-             rm -f /etc/default/slurm-llnl
+         if [ ! -e /usr/sbin/slurmctld -a ! -e /usr/sbin/slurmdbd ] ; then
+           if which ucf >/dev/null; then
+             ucf --purge /etc/qlustar/common/slurm-llnl/slurm.conf
            fi
+           rm -f /etc/qlustar/common/slurm-llnl/slurm.conf
          fi
          ;;
 

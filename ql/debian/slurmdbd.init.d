@@ -7,14 +7,14 @@
 # processname: /usr/sbin/slurmdbd
 # pidfile: /var/run/slurm-llnl/slurmdbd.pid
 #
-# config: /etc/sysconfig/slurm
+# config: /etc/default/slurmdbd
 #
 ### BEGIN INIT INFO
-# Provides:          slurm-llnl-slurmdbd
+# Provides:          slurmdbd
 # Required-Start:    $remote_fs $syslog $network munge
 # Required-Stop:     $remote_fs $syslog $network munge
-# Should-Start:      $named
-# Should-Stop:       $named
+# Should-Start:      $named mysql
+# Should-Stop:       $named mysql
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: SLURM database daemon
@@ -23,13 +23,13 @@
 
 SBINDIR=/usr/sbin
 LIBDIR=/usr/lib
-CONFFILE="/etc/qlustar/common/slurm-llnl/slurmdbd.conf"
-DESCRIPTION="slurm-llnl database server interface"
+CONFFILE="/etc/slurm-llnl/slurmdbd.conf"
+DESCRIPTION="slurm-wlm database server interface"
 NAME="slurmdbd"
 
 # Source slurm specific configuration
-if [ -f /etc/default/slurm-llnl-slurmdbd ] ; then
-    . /etc/default/slurm-llnl-slurmdbd
+if [ -f /etc/default/slurmdbd ] ; then
+    . /etc/default/slurmdbd
 else
     SLURMDBD_OPTIONS=""
 fi

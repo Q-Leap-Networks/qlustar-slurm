@@ -1,4 +1,4 @@
-slurm-llnl (14.03.8-1) experimental; urgency=medium
+slurm-llnl (14.11.0~rc2-ql.1) experimental; urgency=medium
 
   Since version 14.03.7 many binary packages have been
   renamed to remove the llnl acronym because the slurm

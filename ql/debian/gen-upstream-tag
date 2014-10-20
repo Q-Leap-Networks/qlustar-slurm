@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Normal release tags look like 2.6.6-1
+vers=$1
+bugfix="-1"
+
+# Bug fix release tags look like 2.6.6-2
+if [ $(echo $vers | awk -F '.' '{print NF}') -gt 3 ]; then
+  vers=${vers%.*}
+  bugfix="-$(echo ${vers##*.})"
+fi
+
+# pre release or rc tags look like 2.6.6-0rc1
+if echo $vers | grep -q -e 'rc|pre'; then
+  bugfix=""
+fi
+
+echo slurm-$(echo $vers | sed -e 's/\./-/g' -e 's/~rc/-0rc/g')$rc
+exit 0

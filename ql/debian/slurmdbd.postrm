@@ -17,13 +17,14 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
+conffile=/etc/qlustar/common/slurm-llnl/slurmdbd.conf
 
 case "$1" in
        purge)
 	 if which ucf >/dev/null; then
-	   ucf --purge /etc/slurm-llnl/slurmdbd.conf
+	   ucf --purge $conffile
 	 fi
-         rm -rf /etc/slurm-llnl/slurmdbd.conf
+         rm -rf $conffile
          rm -rf /var/log/slurm-llnl/slurmdbd*log*
 	 if [ ! -e /usr/sbin/slurmctld -a ! -e /usr/sbin/slurmd ] ; then
            pkill -9 -u slurm || true

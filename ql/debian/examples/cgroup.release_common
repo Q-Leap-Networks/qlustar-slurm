@@ -19,11 +19,13 @@ subsystem=${progname##*_}
 get_mount_dir()
 {
     local lssubsys=$(type -p lssubsys)
+    local conffile=/etc/qlustar/common/slurm-llnl/cgroup.conf
     if [[ $lssubsys ]]; then
         $lssubsys -m $subsystem | awk '{print $2}'
     else
-        if [ -f /etc/slurm-llnl/cgroup.conf ]; then
-            grep -i "^CgroupMountpoint=" /etc/slurm-llnl/cgroup.conf | sed "s/.*=\(.*\)/\1\/${subsystem}/" | head -n 1
+        if [ -f $conffile ]; then
+            grep -i "^CgroupMountpoint=" $conffile | \
+                sed "s/.*=\(.*\)/\1\/${subsystem}/" | head -n 1
         else
             echo "/cgroup/$subsystem"
         fi

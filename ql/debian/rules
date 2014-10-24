@@ -20,7 +20,7 @@ export PERL_ARCHLIB := $(shell perl -MConfig -e \
   'print substr($$Config{vendorarch}, 1)')
 
 %:
-	dh $@ --parallel
+	dh $@ --parallel --with autoreconf
 
 override_dh_auto_configure:
 	dh_auto_configure -- --libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) \
@@ -60,9 +60,9 @@ override_dh_auto_install:
 	gcc -fPIC -shared -o \
 	  debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/slurm/gethostname.so \
 	  debian/gethostname.c
-	for f in slurmd slurmstepd; do \
-	  chrpath -d debian/tmp/usr/sbin/$$f ; \
-	done
+	#for f in slurmd slurmstepd; do \
+	#  chrpath -d debian/tmp/usr/sbin/$$f ; \
+	#done
 
 override_dh_install:
 	dh_install --list-missing

@@ -1,0 +1,17 @@
+Description: man spelling error
+ slurm.conf.5 man page spelling error fix
+Origin: maintainer
+Forwarded: http://bugs.schedmd.com/show_bug.cgi?id=1197
+Last-Update: 2014-10-22
+
+--- slurm-llnl-14.03.9.orig/doc/man/man5/slurm.conf.5
++++ slurm-llnl-14.03.9/doc/man/man5/slurm.conf.5
+@@ -319,7 +319,7 @@ user environment variables (for Moab spa
+ daemon gets paged from memory.
+ .br
+ .br
+-\fBNote\fR: The test for a job being succesfully launched is only performed when
++\fBNote\fR: The test for a job being successfully launched is only performed when
+ the Slurm daemon on the compute node registers state with the slurmctld daemon
+ on the head node, which happens fairly rarely.
+ Therefore a job will not necessarily be terminated if its start time exceeds

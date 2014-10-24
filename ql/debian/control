@@ -41,12 +41,8 @@ Description: SLURM compute node daemon
 Package: slurmctld
 Architecture: any
 Depends:
- ${shlibs:Depends},
- ${misc:Depends},
- slurm-client (= ${binary:Version}),
- slurm-wlm-basic-plugins (= ${binary:Version}),
- adduser,
- lsb-base
+ ${shlibs:Depends}, ${misc:Depends}, slurm-client (= ${binary:Version}),
+ slurm-wlm-basic-plugins (= ${binary:Version}), adduser, munge, lsb-base
 Replaces: slurm-llnl (<< 14.11)
 Breaks: slurm-llnl (<< 14.11)
 Description: SLURM central management daemon

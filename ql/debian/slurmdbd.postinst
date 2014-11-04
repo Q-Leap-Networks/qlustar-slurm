@@ -25,6 +25,7 @@ case "$1" in
       # Make sure conffile is readable only by owner, since it contains
       # the DB password.
       if [ -e $conffile ]; then
+        chown slurm:slurm $conffile
         chmod 600 $conffile
       fi
     ;;

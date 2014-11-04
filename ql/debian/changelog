@@ -1,9 +1,9 @@
-slurm-llnl (14.11.0~rc2-ql.2) stable; urgency=medium
+slurm-llnl (14.11.0~rc3-ql.1) stable; urgency=medium
 
-  * New upstream version 14.11.0 (RC2)
+  * New upstream version 14.11.0 (RC3)
   * First build with git mechanism
 
- -- Roland Fehrenbacher <rf@q-leap.de>  Tue, 21 Oct 2014 15:24:40 +0000
+ -- Roland Fehrenbacher <rf@q-leap.de>  Tue, 04 Nov 2014 17:53:39 +0100
 
 slurm-llnl (2.6.4-ql.3) stable; urgency=low
 

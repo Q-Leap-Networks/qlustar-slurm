@@ -28,6 +28,8 @@ case "$1" in
         chown slurm:slurm $conffile
         chmod 600 $conffile
       fi
+      # Remove old wrong rc links
+      find /etc/rc?.d -name "*20slurmdbd" | xargs rm -f
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

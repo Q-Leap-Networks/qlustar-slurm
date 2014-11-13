@@ -22,6 +22,8 @@ case "$1" in
       chown slurm:slurm /var/lib/slurm-llnl
       chown slurm:slurm /var/lib/slurm-llnl/slurmctld
       chown slurm:slurm /var/log/slurm-llnl
+      # Remove old wrong rc links
+      find /etc/rc?.d -name "*20slurmctld" | xargs rm -f
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

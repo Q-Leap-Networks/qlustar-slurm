@@ -64,4 +64,10 @@ override_dh_auto_install:
 override_dh_install:
 	dh_install --list-missing
 
+override_dh_installinit:
+	dh_installinit --package=slurmdbd --update-rcd-params="defaults 98 02"
+	dh_installinit --package=slurmctld --update-rcd-params="defaults 99 01"
+	dh_installinit --package=slurmd --update-rcd-params="defaults 99 01"
+
+
 override_dh_auto_test:

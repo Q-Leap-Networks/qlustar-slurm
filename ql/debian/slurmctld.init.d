@@ -14,8 +14,8 @@
 # Provides:          slurmctld
 # Required-Start:    $remote_fs $syslog $network munge
 # Required-Stop:     $remote_fs $syslog $network munge
-# Should-Start:      $named
-# Should-Stop:       $named
+# Should-Start:      $named slurmdbd
+# Should-Stop:       $named slurmdbd
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: slurm daemon management

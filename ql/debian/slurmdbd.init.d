@@ -89,7 +89,7 @@ start() {
 
 stop() { 
     log_daemon_msg "Stopping $DESCRIPTION"
-    STOPERRORMSG="$(start-stop-daemon --oknodo --stop -s TERM \
+    STOPERRORMSG="$(start-stop-daemon --oknodo --stop -R TERM/30/KILL/5 \
     			--exec "$SBINDIR/$NAME" 2>&1)"
     STATUS=$?
     if [ "$STOPERRORMSG" != "" ] ; then 

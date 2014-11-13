@@ -151,7 +151,7 @@ start() {
 stop() {
     desc="$(get_daemon_description $1)"
     log_daemon_msg "Stopping $desc" "$1"
-    STOPERRORMSG="$(start-stop-daemon --oknodo --stop -s TERM \
+    STOPERRORMSG="$(start-stop-daemon --oknodo --stop -R TERM/30/KILL/5 \
                     --exec "$SBINDIR/$1" 2>&1)"
     STATUS=$?
     log_end_msg $STATUS

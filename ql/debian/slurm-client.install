@@ -15,3 +15,4 @@ usr/bin/salloc
 usr/bin/sacct
 usr/bin/scontrol
 usr/bin/sstat
+usr/bin/sh5util

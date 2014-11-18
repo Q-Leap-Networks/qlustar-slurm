@@ -15,5 +15,5 @@ if echo $vers | grep -q -e 'rc|pre'; then
   bugfix=""
 fi
 
-echo slurm-$(echo $vers | sed -e 's/\./-/g' -e 's/~rc/-0rc/g')$rc
+echo slurm-$(echo $vers | sed -e 's/\./-/g' -e 's/~rc/-0rc/g')$bugfix
 exit 0

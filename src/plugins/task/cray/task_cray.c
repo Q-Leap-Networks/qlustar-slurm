@@ -100,12 +100,12 @@ const char plugin_name[]        = "task CRAY plugin";
 const char plugin_type[]        = "task/cray";
 const uint32_t plugin_version   = 100;
 
+#ifdef HAVE_NATIVE_CRAY
 #ifdef HAVE_NUMA
 // TODO: Remove this prototype once the prototype appears in numa.h.
 unsigned int numa_bitmask_weight(const struct bitmask *bmp);
 #endif
 
-#ifdef HAVE_NATIVE_CRAY
 static void _alpsc_debug(const char *file, int line, const char *func,
 			 int rc, int expected_rc, const char *alpsc_func,
 			 char *err_msg);
@@ -120,7 +120,6 @@ static int _update_num_steps(int val);
 static int _step_prologue(void);
 static int _step_epilogue(void);
 static int track_status = 1;
-static int terminated = 0;
 
 // A directory on the compute node where temporary files will be kept
 #define TASK_CRAY_RUN_DIR   "/var/run/task_cray"
@@ -603,27 +602,15 @@ static int _check_status_file(stepd_step_rec_t *job,
 	}
 
 	// Check the result
-	if (status == 0 && !terminated) {
+	if (status == 0) {
 		if (task->killed_by_cmd) {
 			// We've been killed by request. User already knows
 			return SLURM_SUCCESS;
 		}
 
-		// Cancel the job step, since we didn't find the mpi_fini msg
-		// srun only gets the error() messages by default, send one
-		// per compute node, but log all other events with info().
-		if (terminated) {
-			info("step %u.%u task %u exited without calling "
-			     "PMI_Finalize()",
-			     job->jobid, job->stepid, task->gtid);
-		} else {
-			error("step %u.%u task %u exited without calling "
-			      "PMI_Finalize()",
-			      job->jobid, job->stepid, task->gtid);
-			terminated = 1;
-		}
-		info("reset estatus from %d to %d", task->estatus, SIGKILL);
-		task->estatus = SIGKILL;
+		verbose("step %u.%u task %u exited without calling "
+			"PMI_Finalize()",
+			job->jobid, job->stepid, task->gtid);
 	}
 	return SLURM_SUCCESS;
 }

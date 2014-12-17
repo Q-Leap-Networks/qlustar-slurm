@@ -772,9 +772,17 @@ _get_req_features(struct node_set *node_set_ptr, int node_set_size,
 			return ESLURM_NODES_BUSY;	/* reserved */
 		} else if (resv_bitmap &&
 			   (!bit_equal(resv_bitmap, avail_node_bitmap))) {
+			int cnt_in, cnt_out;
+			cnt_in = bit_set_count(avail_node_bitmap);
 			bit_and(resv_bitmap, avail_node_bitmap);
 			save_avail_node_bitmap = avail_node_bitmap;
 			avail_node_bitmap = resv_bitmap;
+			cnt_out = bit_set_count(avail_node_bitmap);
+			if (cnt_in != cnt_out) {
+				debug2("Advanced reservation removed %d nodes "
+				       "from consideration for job %u",
+				       (cnt_in - cnt_out), job_ptr->job_id);
+			}
 			resv_bitmap = NULL;
 		} else {
 			FREE_NULL_BITMAP(resv_bitmap);
@@ -1823,6 +1831,8 @@ extern int select_nodes(struct job_record *job_ptr, bool test_only,
 	}
 
 	job_end_time_reset(job_ptr);
+	/* Clear any vestigial GRES in case job was requeued */
+	gres_plugin_job_clear(job_ptr->gres_list);
 
 	job_array_post_sched(job_ptr);
 	if (select_g_job_begin(job_ptr) != SLURM_SUCCESS) {
@@ -1862,8 +1872,6 @@ extern int select_nodes(struct job_record *job_ptr, bool test_only,
 	if (configuring
 	    || bit_overlap(job_ptr->node_bitmap, power_node_bitmap))
 		job_ptr->job_state |= JOB_CONFIGURING;
-	/* Clear any vestigial GRES in case job was requeued */
-	gres_plugin_job_clear(job_ptr->gres_list);
 	if (select_g_select_nodeinfo_set(job_ptr) != SLURM_SUCCESS) {
 		error("select_g_select_nodeinfo_set(%u): %m", job_ptr->job_id);
 		/* not critical ... by now */

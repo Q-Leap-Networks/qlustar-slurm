@@ -121,7 +121,7 @@ static void _add_assoc_hash(slurmdb_association_rec_t *assoc)
 
 	if (!assoc_hash_id)
 		assoc_hash_id = xmalloc(ASSOC_HASH_SIZE *
-				     sizeof(slurmdb_association_rec_t *));
+					sizeof(slurmdb_association_rec_t *));
 	if (!assoc_hash)
 		assoc_hash = xmalloc(ASSOC_HASH_SIZE *
 				     sizeof(slurmdb_association_rec_t *));
@@ -249,19 +249,21 @@ static slurmdb_association_rec_t *_find_assoc_rec(
  *	assoc_count - count of assoc list entries
  *	assoc_hash - hash table into assoc records
  */
-static void _delete_assoc_hash(void *assoc)
+static void _delete_assoc_hash(slurmdb_association_rec_t *assoc)
 {
-	slurmdb_association_rec_t *assoc_ptr =
-		(slurmdb_association_rec_t *) assoc;
+	slurmdb_association_rec_t *assoc_ptr = assoc;
 	slurmdb_association_rec_t **assoc_pptr;
 
 	xassert(assoc);
 
 	/* Remove the record from assoc hash table */
 	assoc_pptr = &assoc_hash_id[ASSOC_HASH_ID_INX(assoc_ptr->id)];
-	while (assoc_pptr && ((assoc_ptr = *assoc_pptr) !=
-			      (slurmdb_association_rec_t *) assoc))
-		assoc_pptr = &assoc_ptr->assoc_next_id;
+	while (assoc_pptr && ((assoc_ptr = *assoc_pptr) != assoc)) {
+		if (!assoc_ptr->assoc_next_id)
+			assoc_pptr = NULL;
+		else
+			assoc_pptr = &assoc_ptr->assoc_next_id;
+	}
 
 	if (!assoc_pptr) {
 		fatal("assoc id hash error");
@@ -269,11 +271,14 @@ static void _delete_assoc_hash(void *assoc)
 	} else
 		*assoc_pptr = assoc_ptr->assoc_next_id;
 
-	assoc_ptr = (slurmdb_association_rec_t *) assoc;
+	assoc_ptr = assoc;
 	assoc_pptr = &assoc_hash[_assoc_hash_index(assoc_ptr)];
-	while (assoc_pptr && ((assoc_ptr = *assoc_pptr) !=
-			      (slurmdb_association_rec_t *) assoc))
-		assoc_pptr = &assoc_ptr->assoc_next;
+	while (assoc_pptr && ((assoc_ptr = *assoc_pptr) != assoc)) {
+		if (!assoc_ptr->assoc_next)
+			assoc_pptr = NULL;
+		else
+			assoc_pptr = &assoc_ptr->assoc_next;
+	}
 
 	if (!assoc_pptr) {
 		fatal("assoc hash error");
@@ -456,13 +461,16 @@ static int _change_user_name(slurmdb_user_rec_t *user)
 			if (!assoc->user)
 				continue;
 			if (!strcmp(user->old_name, assoc->user)) {
+				/* Since the uid changed the
+				   hash as well will change.  Remove
+				   the assoc from the hash before the
+				   change or you won't find it.
+				*/
+				_delete_assoc_hash(assoc);
+
 				xfree(assoc->user);
 				assoc->user = xstrdup(user->name);
 				assoc->uid = user->uid;
-				/* Since the uid changed the
-				   hash as well will change.
-				*/
-				_delete_assoc_hash(assoc);
 				_add_assoc_hash(assoc);
 				debug3("changing assoc %d", assoc->id);
 			}
@@ -1127,16 +1135,13 @@ static int _get_assoc_mgr_res_list(void *db_conn, int enforce)
 static int _get_assoc_mgr_qos_list(void *db_conn, int enforce)
 {
 	uid_t uid = getuid();
+	List new_list = NULL;
 	assoc_mgr_lock_t locks = { NO_LOCK, NO_LOCK,
 				   WRITE_LOCK, NO_LOCK, NO_LOCK, NO_LOCK };
 
-	assoc_mgr_lock(&locks);
-	if (assoc_mgr_qos_list)
-		list_destroy(assoc_mgr_qos_list);
-	assoc_mgr_qos_list = acct_storage_g_get_qos(db_conn, uid, NULL);
+	new_list = acct_storage_g_get_qos(db_conn, uid, NULL);
 
-	if (!assoc_mgr_qos_list) {
-		assoc_mgr_unlock(&locks);
+	if (!new_list) {
 		if (enforce & ACCOUNTING_ENFORCE_ASSOCS) {
 			error("_get_assoc_mgr_qos_list: no list was made.");
 			return SLURM_ERROR;
@@ -1145,9 +1150,16 @@ static int _get_assoc_mgr_qos_list(void *db_conn, int enforce)
 		}
 	}
 
+	assoc_mgr_lock(&locks);
+
+	FREE_NULL_LIST(assoc_mgr_qos_list);
+	assoc_mgr_qos_list = new_list;
+	new_list = NULL;
+
 	_post_qos_list(assoc_mgr_qos_list);
 
 	assoc_mgr_unlock(&locks);
+
 	return SLURM_SUCCESS;
 }
 
@@ -1835,13 +1847,21 @@ extern int assoc_mgr_fill_in_assoc(void *db_conn,
 	if (assoc_pptr)
 		*assoc_pptr = NULL;
 
-	/* Call assoc_mgr_refresh_lists instead of just getting the
-	   association list because we need qos and user lists before
-	   the association list can be made.
-	*/
-	if (!assoc_mgr_association_list)
-		if (assoc_mgr_refresh_lists(db_conn) == SLURM_ERROR)
-			return SLURM_ERROR;
+	/* Since we might be locked we can't come in here and try to
+	 * get the list since we would need the WRITE_LOCK to do that,
+	 * so just return as this would only happen on a system not
+	 * talking to the database.
+	 */
+	if (!assoc_mgr_association_list) {
+		int rc = SLURM_SUCCESS;
+
+		if (enforce & ACCOUNTING_ENFORCE_QOS) {
+			error("No Association list available, "
+			      "this should never happen");
+			rc = SLURM_ERROR;
+		}
+		return rc;
+	}
 
 	if ((!assoc_mgr_association_list
 	     || !list_count(assoc_mgr_association_list))
@@ -2092,14 +2112,28 @@ extern int assoc_mgr_fill_in_qos(void *db_conn, slurmdb_qos_rec_t *qos,
 
 	if (qos_pptr)
 		*qos_pptr = NULL;
-	if (!assoc_mgr_qos_list)
-		if (_get_assoc_mgr_qos_list(db_conn, enforce) == SLURM_ERROR)
-			return SLURM_ERROR;
 
 	if (!locked)
 		assoc_mgr_lock(&locks);
-	if ((!assoc_mgr_qos_list || !list_count(assoc_mgr_qos_list))
-	    && !(enforce & ACCOUNTING_ENFORCE_QOS)) {
+
+	/* Since we might be locked we can't come in here and try to
+	 * get the list since we would need the WRITE_LOCK to do that,
+	 * so just return as this would only happen on a system not
+	 * talking to the database.
+	 */
+	if (!assoc_mgr_qos_list) {
+		int rc = SLURM_SUCCESS;
+
+		if (enforce & ACCOUNTING_ENFORCE_QOS) {
+			error("No QOS list available, "
+			      "this should never happen");
+			rc = SLURM_ERROR;
+		}
+		if (!locked)
+			assoc_mgr_unlock(&locks);
+		return rc;
+	} else if (!list_count(assoc_mgr_qos_list)
+		   && !(enforce & ACCOUNTING_ENFORCE_QOS)) {
 		if (!locked)
 			assoc_mgr_unlock(&locks);
 		return SLURM_SUCCESS;
@@ -4576,11 +4610,14 @@ extern int assoc_mgr_set_missing_uids()
 					       "couldn't get a uid for user %s",
 					       object->user);
 				} else {
-					object->uid = pw_uid;
 					/* Since the uid changed the
-					   hash as well will change.
+					   hash as well will change.  Remove
+					   the assoc from the hash before the
+					   change or you won't find it.
 					*/
 					_delete_assoc_hash(object);
+
+					object->uid = pw_uid;
 					_add_assoc_hash(object);
 				}
 			}

@@ -1,6 +1,46 @@
 This file describes changes in recent versions of Slurm. It primarily
 documents those changes that are of interest to users and administrators.
 
+* Changes in Slurm 14.11.2
+==========================
+ -- Fix Centos5 compile errors.
+ -- Fix issue with association hash not getting the correct index which
+    could result in seg fault.
+ -- Fix salloc/sbatch -B segfault.
+ -- Avoid huge malloc if GRES configured with "Type" and huge "Count".
+ -- Fix jobs from starting in overlapping reservations that won't finish before
+    a "maint" reservation begins.
+ -- When node gets drained while in state mixed display its status as draining
+    in sinfo output.
+ -- Allow priority/multifactor to work with sched/wiki(2) if all priorities
+    have no weight.  This allows for association and QOS decay limits to work.
+ -- Fix "squeue --start" to override SQUEUE_FORMAT env variable.
+ -- Fix scancel to be able to cancel multiple jobs that are space delimited.
+ -- Log Cray MPI job calling exit() without mpi_fini(), but do not treat it as
+    a fatal error. This partially reverts logic added in version 14.03.9.
+ -- sview - Fix displaying of suspended steps elapsed times.
+ -- Increase number of messages that get cached before throwing them away
+    when the DBD is down.
+ -- Fix jobs from starting in overlapping reservations that won't finish before
+    a "maint" reservation begins.
+ -- Restore GRES functionality with select/linear plugin. It was broken in
+    version  14.03.10.
+ -- Fix bug with GRES having multiple types that can cause slurmctld abort.
+ -- Fix squeue issue with not recognizing "localhost" in --nodelist option.
+ -- Make sure the bitstrings for a partitions Allow/DenyQOS are up to date
+    when running from cache.
+ -- Add smap support for job arrays and larger job ID values.
+ -- Fix possible race condition when attempting to use QOS on a system running
+    accounting_storage/filetxt.
+ -- Fix issue with accounting_storage/filetxt and job arrays not being printed
+    correctly.
+ -- In proctrack/linuxproc and proctrack/pgid, check the result of strtol()
+    for error condition rather than errno, which might have a vestigial error
+    code.
+ -- Improve information recording for jobs deferred due to advanced reservation.
+ -- Exports eio_new_initial_obj to the plugins and initialize kvs_seq on mpi/pmi2
+    setup to support launching.
+
 * Changes in Slurm 14.11.1
 ==========================
  -- Get libs correct when doing the xtree/xhash make check.
@@ -324,9 +364,13 @@ documents those changes that are of interest to users and administrators.
  -- When a job dependency can never be satisfied do not cancel the job but keep
     pending with reason WAIT_DEP_INVALID (DependencyNeverSatisfied).
 
+* Changes in Slurm 14.03.12
+===========================
+
 * Changes in Slurm 14.03.11
 ===========================
- -- ALPS - Fix depth for Memory items in BASIL with CLE 5.2.
+ -- ALPS - Fix depth for Memory items in BASIL with CLE 5.2
+    (changed starting in 5.2.3).
  -- ALPS - Fix issue when tracking memory on a PerNode basis instead of
     PerCPU.
  -- Modify assoc_mgr_fill_in_qos() to allow for a flag to know if the QOS read
@@ -350,6 +394,20 @@ documents those changes that are of interest to users and administrators.
  -- ALPS - Fix --ntasks-per-core option on multiple nodes.
  -- Double max string that Slurm can pack from 16MB to 32MB to support
     larger MPI2 configurations.
+ -- Fix Centos5 compile issues.
+ -- Log Cray MPI job calling exit() without mpi_fini(), but do not treat it as
+    a fatal error. This partially reverts logic added in version 14.03.9.
+ -- sview - Fix displaying of suspended steps elapsed times.
+ -- Increase number of messages that get cached before throwing them away
+    when the DBD is down.
+ -- Fix jobs from starting in overlapping reservations that won't finish before
+    a "maint" reservation begins.
+ -- Fix "squeue --start" to override SQUEUE_FORMAT env variable.
+ -- Restore GRES functionality with select/linear plugin. It was broken in
+    version  14.03.10.
+ -- Fix possible race condition when attempting to use QOS on a system running
+    accounting_storage/filetxt.
+ -- Sanity check for Correct QOS on startup.
 
 * Changes in Slurm 14.03.10
 ===========================

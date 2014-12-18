@@ -1,5 +1,4 @@
 usr/lib/*/libslurmdb*.a
 usr/lib/*/libslurmdb*.la
 usr/lib/*/libslurmdb*.so
-usr/share/man/man3/*
 usr/include/slurm/slurmdb.h

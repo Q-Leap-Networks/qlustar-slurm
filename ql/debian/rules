@@ -42,6 +42,9 @@ override_dh_auto_install:
 	# Handle pam stuff
 	$(MAKE) -C contribs/pam install DESTDIR=$(CURDIR)/debian/tmp
 
+	# Handle pmi2 stuff
+	$(MAKE) -C contribs/pmi2 install DESTDIR=$(CURDIR)/debian/tmp
+
 	# Handle libslurm[db]-perl pkgs
 	$(MAKE) -C contribs/perlapi install DESTDIR=$(CURDIR)/debian/tmp \
 	  PERL_MM_OPT="INSTALLDIRS=vendor"

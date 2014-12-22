@@ -1,9 +1,10 @@
-slurm-llnl (14.11.2-ql.2) stable; urgency=medium
+slurm-llnl (14.11.2-ql.3) stable; urgency=medium
 
   * New upstream 14.11.2
   * Fix paths in libslurm28
+  * Add libpmi2 packages
 
- -- Roland Fehrenbacher <rf@q-leap.de>  Thu, 18 Dec 2014 14:25:38 +0100
+ -- Roland Fehrenbacher <rf@q-leap.de>  Mon, 22 Dec 2014 21:28:33 +0100
 
 slurm-llnl (14.11.1-ql.1) stable; urgency=medium
 

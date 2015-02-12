@@ -1903,12 +1903,8 @@ extern int test_job_dependency(struct job_record *job_ptr)
 	depend_iter = list_iterator_create(job_ptr->details->depend_list);
 	while ((dep_ptr = list_next(depend_iter))) {
 		bool clear_dep = false;
-		if (dep_ptr->array_task_id == INFINITE) {
-			dep_ptr->job_ptr = find_job_record(dep_ptr->job_id);
-		} else if (dep_ptr->array_task_id != NO_VAL) {
-			dep_ptr->job_ptr = find_job_array_rec(dep_ptr->job_id,
-							dep_ptr->array_task_id);
-		}
+		dep_ptr->job_ptr = find_job_array_rec(dep_ptr->job_id,
+						      dep_ptr->array_task_id);
 		djob_ptr = dep_ptr->job_ptr;
  		if ((dep_ptr->depend_type == SLURM_DEPEND_SINGLETON) &&
  		    job_ptr->name) {
@@ -1942,8 +1938,7 @@ extern int test_job_dependency(struct job_record *job_ptr)
 			    (djob_ptr->array_job_id != dep_ptr->job_id))) {
 			/* job is gone, dependency lifted */
 			clear_dep = true;
-		} else if ((djob_ptr->array_task_id == INFINITE) &&
-			   (djob_ptr->array_recs != NULL)) {
+		} else if (dep_ptr->array_task_id == INFINITE) {
 			bool array_complete, array_completed, array_pending;
 			array_complete=test_job_array_complete(dep_ptr->job_id);
 			array_completed=test_job_array_completed(dep_ptr->job_id);

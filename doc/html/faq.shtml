@@ -175,6 +175,7 @@ launch a shell on a node in the job's allocation?</a></li>
 <li><a href="#state_info">How could some jobs submitted immediately before the
    slurmctld daemon crashed be lost?</a></li>
 <li><a href="#delete_partition">How do I safely remove partitions?</a></li>
+<li><a href="#cpu_freq">Why is Slurm unable to set the CPU frequency for jobs?</a></li>
 </ol>
 
 <h2>For Management</h2>
@@ -222,7 +223,7 @@ Note that setting the node DOWN will terminate all running or suspended
 jobs associated with that node.
 An alternative is to set the node's state to DRAIN until all jobs
 associated with it terminate before setting it DOWN and re-booting.</p>
-<p>Note tha. Slurm has two configuration parameters that may be used to
+<p>Note that Slurm has two configuration parameters that may be used to
 automate some of this process.
 <i>UnkillableStepProgram</i> specifies a program to execute when
 non-killable processes are identified.
@@ -1195,13 +1196,13 @@ pathnames and port numbers to avoid conflicts.
 The only problem is if more than one version of Slurm is configured
 with <i>switch/elan</i> or <i>switch/federation</i>.
 In that case, there can be conflicting switch window requests from
-the differen. Slurm systems.
+the different Slurm systems.
 This can be avoided by configuring the test system with <i>switch/none</i>.
 MPI jobs started on an Elan or Federation switch system without the
 switch windows configured will not execute properly, but other jobs
 will run fine.
 Another option for testing on Elan or Federation systems is to use
-a different set of nodes for the differen. Slurm systems.
+a different set of nodes for the different Slurm systems.
 That will permit both systems to allocate switch windows without
 conflicts.
 
@@ -1738,7 +1739,7 @@ It has integration with Slurm as well as Torque resource managers.</p>
 <p><a name="add_nodes"><b>47. What process should I follow to add nodes to Slurm?</b></a></br>
 The slurmctld daemon has a multitude of bitmaps to track state of nodes and cores
 in the system. Adding nodes to a running system would require the slurmctld daemon
-rebuild all of those bitmaps, which the developers feel would be safer to do by
+to rebuild all of those bitmaps, which the developers feel would be safer to do by
 restarting the daemon. Communications from the slurmd daemons on the compute
 nodes to the slurmctld daemon include a configuration file checksum, so you
 probably also want to maintain a common slurm.conf file on all nodes. The
@@ -1752,13 +1753,17 @@ following procedure is recommended:
 "scontrol reconfig", no need to restart the daemons)</li>
 </ol>
 
+NOTE: Jobs submitted with srun, and that are waiting for an allocation,
+prior to new nodes being added to the slurm.conf can fail if the job is
+allocated one of the new nodes.
+
 <p><a name="licenses"><b>48. Can Slurm be configured to manage licenses?</b></a></br>
 Slurm is not currently integrated with FlexLM, but it does provide for the
 allocation of global resources called licenses. Use the Licenses configuration
 parameter in your slurm.conf file (e.g. "Licenses=foo:10,bar:20").
 Jobs can request licenses and be granted exclusive use of those resources
 (e.g. "sbatch --licenses=foo:2,bar:1 ...").
-It is not currently possible to change the total number of lincenses on a system
+It is not currently possible to change the total number of licenses on a system
 without restarting the slurmctld daemon, but it is possible to dynamically
 reserve licenses and remove them from being available to jobs on the system
 (e.g. "scontrol update reservation=licenses_held licenses=foo:5,bar:2").</p>
@@ -1961,8 +1966,26 @@ Removing a partition from the slurm.conf and restarting will cancel any existing
 jobs that reference the removed partitions.
 </p>
 
+<p><a name="cpu_freq"><b>61. Why is Slurm unable to set the CPU frequency for
+   jobs?</b></a><br>
+First check that Slurm is configured to bind jobs to specific CPUs by
+making sure that TaskPlugin is configured to either affinity or cgroup.
+Next check that that your processor is configured to permit frequency
+control by examining the values in the file
+<i>/sys/devices/system/cpu/cpu0/cpufreq</i> where "cpu0" represents a CPU ID 0.
+Of particular interest is the file <i>scaling_available_governors</i>,
+which identifies the CPU governors available.
+If "userspace" is not an available CPU governor, this may well be due to the
+<i>intel_pstate</i> driver being installed.
+Information about disabling the <i>intel_pstate</i> driver is available
+from<br>
+<a href="https://bugzilla.kernel.org/show_bug.cgi?id=57141">
+https://bugzilla.kernel.org/show_bug.cgi?id=57141</a> and<br>
+<a href="http://unix.stackexchange.com/questions/121410/setting-cpu-governor-to-on-demand-or-conservative">
+http://unix.stackexchange.com/questions/121410/setting-cpu-governor-to-on-demand-or-conservative</a>.</p>
+
 <p class="footer"><a href="#top">top</a></p>
 
-<p style="text-align:center;">Last modified 15 October 2014</p>
+<p style="text-align:center;">Last modified 30 December 2014</p>
 
 <!--#include virtual="footer.txt"-->

@@ -178,7 +178,7 @@ static struct job_record *_job_rec_copy(struct job_record *job_ptr);
 static void _job_timed_out(struct job_record *job_ptr);
 static int  _job_create(job_desc_msg_t * job_specs, int allocate, int will_run,
 			struct job_record **job_rec_ptr, uid_t submit_uid,
-			char **err_msg);
+			char **err_msg, uint16_t protocol_version);
 static void _list_delete_job(void *job_entry);
 static int  _list_find_job_id(void *job_entry, void *key);
 static int  _list_find_job_old(void *job_entry, void *key);
@@ -2422,8 +2422,8 @@ static void _remove_job_hash(struct job_record *job_entry)
                 fatal("job hash error");
                 return; /* Fix CLANG false positive error */
         }
-        job_entry->job_next = NULL;
-
+	*job_pptr = job_entry->job_next;
+	job_entry->job_next = NULL;
 }
 
 /* _add_job_array_hash - add a job hash entry for given job record,
@@ -2476,8 +2476,6 @@ extern bool test_job_array_complete(uint32_t array_job_id)
 	if (job_ptr) {
 		if (!IS_JOB_COMPLETE(job_ptr))
 			return false;
-		if (job_ptr->array_recs && job_ptr->array_recs->task_cnt)
-			return false;
 		if (job_ptr->array_recs && job_ptr->array_recs->max_exit_code)
 			return false;
 	}
@@ -2504,8 +2502,6 @@ extern bool test_job_array_completed(uint32_t array_job_id)
 	job_ptr = find_job_record(array_job_id);
 	if (job_ptr) {
 		if (!IS_JOB_COMPLETED(job_ptr))
-			return false;
-		if (job_ptr->array_recs && job_ptr->array_recs->task_cnt)
 			return false;
 	}
 
@@ -2568,6 +2564,12 @@ extern struct job_record *find_job_array_rec(uint32_t array_job_id,
 		return find_job_record(array_job_id);
 
 	if (array_task_id == INFINITE) {	/* find by job ID */
+		/* Look for job record with all of the pending tasks */
+		job_ptr = find_job_record(array_job_id);
+		if (job_ptr && job_ptr->array_recs &&
+		    (job_ptr->array_job_id == array_job_id))
+			return job_ptr;
+
 		inx = JOB_HASH_INX(array_job_id);
 		job_ptr = job_array_hash_j[inx];
 		while (job_ptr) {
@@ -2579,14 +2581,6 @@ extern struct job_record *find_job_array_rec(uint32_t array_job_id,
 			}
 			job_ptr = job_ptr->job_array_next_j;
 		}
-		if (match_job_ptr)
-			return match_job_ptr;
-
-		/* Look for job record with all of the pending tasks */
-		job_ptr = find_job_record(array_job_id);
-		if (job_ptr && job_ptr->array_recs &&
-		    (job_ptr->array_job_id == array_job_id))
-			return job_ptr;
 		return match_job_ptr;
 	} else {		/* Find specific task ID */
 		inx = JOB_ARRAY_HASH_INX(array_job_id, array_task_id);
@@ -3552,6 +3546,7 @@ struct job_record *_job_rec_copy(struct job_record *job_ptr)
 		job_ptr_pend->select_jobinfo =
 			select_g_select_jobinfo_copy(job_ptr->select_jobinfo);
 	}
+	job_ptr_pend->sched_nodes = NULL;
 	if (job_ptr->spank_job_env_size) {
 		job_ptr_pend->spank_job_env =
 			xmalloc(sizeof(char *) *
@@ -3723,6 +3718,7 @@ static int _select_nodes_parts(struct job_record *job_ptr, bool test_only,
  * IN submit_uid -uid of user issuing the request
  * OUT job_pptr - set to pointer to job record
  * OUT err_msg - Custom error message to the user, caller to xfree results
+ * IN protocol_version - version of the code the caller is using
  * RET 0 or an error code. If the job would only be able to execute with
  *	some change in partition configuration then
  *	ESLURM_REQUESTED_PART_CONFIG_UNAVAILABLE is returned
@@ -3734,7 +3730,8 @@ static int _select_nodes_parts(struct job_record *job_ptr, bool test_only,
 extern int job_allocate(job_desc_msg_t * job_specs, int immediate,
 			int will_run, will_run_response_msg_t **resp,
 			int allocate, uid_t submit_uid,
-			struct job_record **job_pptr, char **err_msg)
+			struct job_record **job_pptr, char **err_msg,
+			uint16_t protocol_version)
 {
 	static int defer_sched = -1;
 	int error_code, i;
@@ -3757,7 +3754,8 @@ extern int job_allocate(job_desc_msg_t * job_specs, int immediate,
 	}
 
 	error_code = _job_create(job_specs, allocate, will_run,
-				 &job_ptr, submit_uid, err_msg);
+				 &job_ptr, submit_uid, err_msg,
+				 protocol_version);
 	*job_pptr = job_ptr;
 
 	if (error_code) {
@@ -5158,7 +5156,7 @@ extern int job_limits_check(struct job_record **job_pptr, bool check_min_time)
 
 static int _job_create(job_desc_msg_t * job_desc, int allocate, int will_run,
 		       struct job_record **job_pptr, uid_t submit_uid,
-		       char **err_msg)
+		       char **err_msg, uint16_t protocol_version)
 {
 	static int launch_type_poe = -1;
 	int error_code = SLURM_SUCCESS, i, qos_error;
@@ -5462,10 +5460,11 @@ static int _job_create(job_desc_msg_t * job_desc, int allocate, int will_run,
 						       &exc_bitmap))) {
 		if (error_code == SLURM_ERROR)
 			error_code = ESLURM_ERROR_ON_DESC_TO_RECORD_COPY;
+		job_ptr = *job_pptr;
 		goto cleanup_fail;
 	}
 	job_ptr = *job_pptr;
-	job_ptr->start_protocol_ver = SLURM_PROTOCOL_VERSION;
+	job_ptr->start_protocol_ver = protocol_version;
 	job_ptr->part_ptr = part_ptr;
 	job_ptr->part_ptr_list = part_ptr_list;
 
@@ -6362,6 +6361,7 @@ _copy_job_desc_to_job_record(job_desc_msg_t * job_desc,
 	if (error_code)
 		return error_code;
 
+	*job_rec_ptr = job_ptr;
 	job_ptr->partition = xstrdup(job_desc->partition);
 	if (job_desc->profile != ACCT_GATHER_PROFILE_NOT_SET)
 		job_ptr->profile = job_desc->profile;
@@ -6548,7 +6548,6 @@ _copy_job_desc_to_job_record(job_desc_msg_t * job_desc,
 	 */
 
 	detail_ptr->mc_ptr = _set_multi_core_data(job_desc);
-	*job_rec_ptr = job_ptr;
 	return SLURM_SUCCESS;
 }
 
@@ -6673,16 +6672,25 @@ void job_time_limit(void)
 	while ((job_ptr =(struct job_record *) list_next(job_iterator))) {
 		xassert (job_ptr->magic == JOB_MAGIC);
 
+#ifndef HAVE_BG
+		/* If the CONFIGURING flag is removed elsewhere like
+		 * on a Bluegene system this check is not needed and
+		 * should be avoided.  In the case of BG blocks that
+		 * are booting aren't associated with
+		 * power_node_bitmap so bit_overlap always returns 0
+		 * and erroneously removes the flag.
+		 */
 		if (IS_JOB_CONFIGURING(job_ptr)) {
 			if (!IS_JOB_RUNNING(job_ptr) ||
 			    (bit_overlap(job_ptr->node_bitmap,
 					 power_node_bitmap) == 0)) {
-				debug("%s: Configuration for job %u is complete",
+				debug("%s: Configuration for job %u is "
+				      "complete",
 				      __func__, job_ptr->job_id);
 				job_ptr->job_state &= (~JOB_CONFIGURING);
 			}
 		}
-
+#endif
 		/* This needs to be near the top of the loop, checks every
 		 * running, suspended and pending job */
 		resv_status = job_resv_check(job_ptr);
@@ -7270,7 +7278,6 @@ extern void pack_all_jobs(char **buffer_ptr, int *buffer_size,
 	struct job_record *job_ptr;
 	uint32_t jobs_packed = 0, tmp_offset;
 	Buf buffer;
-	time_t min_age = 0, now = time(NULL);
 
 	buffer_ptr[0] = NULL;
 	*buffer_size = 0;
@@ -7280,10 +7287,7 @@ extern void pack_all_jobs(char **buffer_ptr, int *buffer_size,
 	/* write message body header : size and time */
 	/* put in a place holder job record count of 0 for now */
 	pack32(jobs_packed, buffer);
-	pack_time(now, buffer);
-
-	if (slurmctld_conf.min_job_age > 0)
-		min_age = now  - slurmctld_conf.min_job_age;
+	pack_time(time(NULL), buffer);
 
 	/* write individual job records */
 	part_filter_set(uid);
@@ -7297,10 +7301,6 @@ extern void pack_all_jobs(char **buffer_ptr, int *buffer_size,
 
 		if (_hide_job(job_ptr, uid))
 			continue;
-
-		if ((min_age > 0) && (job_ptr->end_time < min_age) &&
-		    (! IS_JOB_COMPLETING(job_ptr)) && IS_JOB_FINISHED(job_ptr))
-			continue;	/* job ready for purging, don't dump */
 
 		if ((filter_uid != NO_VAL) && (filter_uid != job_ptr->user_id))
 			continue;
@@ -10347,6 +10347,9 @@ extern int update_job(slurm_msg_t *msg, uid_t uid)
 	struct job_record *job_ptr;
 	int rc;
 
+	xfree(job_specs->job_id_str);
+	xstrfmtcat(job_specs->job_id_str, "%u", job_specs->job_id);
+
 	job_ptr = find_job_record(job_specs->job_id);
 	if (job_ptr == NULL) {
 		error("update_job: job_id %u does not exist.",
@@ -12087,6 +12090,10 @@ static int _job_suspend(struct job_record *job_ptr, uint16_t op, bool indf_susp)
 
 	/* perform the operation */
 	if (op == SUSPEND_JOB) {
+		if (IS_JOB_SUSPENDED(job_ptr) && indf_susp) {
+			job_ptr->priority = 0;	/* Prevent gang sched resume */
+			return SLURM_SUCCESS;
+		}
 		if (!IS_JOB_RUNNING(job_ptr))
 			return ESLURM_JOB_NOT_RUNNING;
 		rc = _suspend_job_nodes(job_ptr, indf_susp);
@@ -13558,7 +13565,7 @@ extern int job_restart(checkpoint_msg_t *ckpt_ptr, uid_t uid, slurm_fd_t conn_fd
 			  NULL,		/* resp */
 			  0,		/* allocate */
 			  0,		/* submit_uid. set to 0 to set job_id */
-			  &job_ptr, NULL);
+			  &job_ptr, NULL, SLURM_PROTOCOL_VERSION);
 
 	/* set restart directory */
 	if (job_ptr) {

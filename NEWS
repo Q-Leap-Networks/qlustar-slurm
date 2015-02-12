@@ -1,6 +1,47 @@
 This file describes changes in recent versions of Slurm. It primarily
 documents those changes that are of interest to users and administrators.
 
+* Changes in Slurm 14.11.3
+==========================
+ -- Prevent vestigial job record when cancelling a pending job array record.
+ -- Fixed squeue core dump.
+ -- Fix job array hash table bug, could result in slurmctld infinite loop or
+    invalid memory reference.
+ -- In srun honor ntasks_per_node before looking at cpu count when the user
+    doesn't request a number of tasks.
+ -- Fix ghost job when submitting job after all jobids are exhausted.
+ -- MySQL - Enhanced coordinator security checks.
+ -- Fix for task/affinity if an admin configures a node for having threads
+    but then sets CPUs to only represent the number of cores on the node.
+ -- Make it so previous versions of salloc/srun work with newer versions
+    of Slurm daemons.
+ -- Avoid delay on commit for PMI rank 0 to improve performance with some
+    MPI implementations.
+ -- auth/munge - Correct logic to read old format AccountingStoragePass.
+ -- Reset node "RESERVED" state as appropriate when deleting a maintenance
+    reservation.
+ -- Prevent a job manually suspended from being resumed by gang scheduler once
+    free resources are available.
+ -- Prevent invalid job array task ID value if a task is started using gang
+    scheduling.
+ -- Fixes for clean build on FreeBSD.
+ -- Fix documentation bugs in slurm.conf.5. DenyAccount should be DenyAccounts.
+ -- For backward compatibility with older versions of OMPI not compiled
+    with --with-pmi restore the SLURM_STEP_RESV_PORTS in the job environment.
+ -- Update the html documentation describing the integration with openmpi.
+ -- Fix sacct when searching by nodelist.
+ -- Fix cosmetic info statements when dealing with a job array task instead of
+    a normal job.
+ -- Fix segfault with job arrays.
+ -- Correct the sbatch pbs parser to process -j.
+ -- BGQ - Put print statement under a DebugFlag.  This was just an oversight.
+ -- BLUEGENE - Remove check that would erroneously remove the CONFIGURING
+    flag from a job while the job is waiting for a block to boot.
+ -- Fix segfault in slurmstepd when job exceeded memory limit.
+ -- Fix race condition that could start a job that is dependent upon a job array
+    before all tasks of that job array complete.
+ -- PMI2 race condition fix.
+
 * Changes in Slurm 14.11.2
 ==========================
  -- Fix Centos5 compile errors.
@@ -37,9 +78,10 @@ documents those changes that are of interest to users and administrators.
  -- In proctrack/linuxproc and proctrack/pgid, check the result of strtol()
     for error condition rather than errno, which might have a vestigial error
     code.
- -- Improve information recording for jobs deferred due to advanced reservation.
- -- Exports eio_new_initial_obj to the plugins and initialize kvs_seq on mpi/pmi2
-    setup to support launching.
+ -- Improve information recording for jobs deferred due to advanced
+    reservation.
+ -- Exports eio_new_initial_obj to the plugins and initialize kvs_seq on
+    mpi/pmi2 setup to support launching.
 
 * Changes in Slurm 14.11.1
 ==========================
@@ -366,6 +408,12 @@ documents those changes that are of interest to users and administrators.
 
 * Changes in Slurm 14.03.12
 ===========================
+ -- Make it so previous versions of salloc/srun work with newer versions
+    of Slurm daemons.
+ -- PMI2 race condition fix.
+ -- Avoid delay on commit for PMI rank 0 to improve performance with some
+    MPI implementations.
+ -- Correct the sbatch pbs parser to process -j.
 
 * Changes in Slurm 14.03.11
 ===========================

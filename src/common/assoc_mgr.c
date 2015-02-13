@@ -176,9 +176,10 @@ static slurmdb_association_rec_t *_find_assoc_rec_id(uint32_t assoc_id)
 }
 
 /*
- * find_job_record - return a pointer to the job record with the given job_id
- * IN job_id - requested job's id
- * RET pointer to the job's record, NULL on error
+ * _find_assoc_rec - return a pointer to the assoc_ptr with the given
+ * contents of assoc.
+ * IN assoc - requested association info
+ * RET pointer to the assoc_ptr's record, NULL on error
  */
 static slurmdb_association_rec_t *_find_assoc_rec(
 	slurmdb_association_rec_t *assoc)
@@ -199,11 +200,25 @@ static slurmdb_association_rec_t *_find_assoc_rec(
 	assoc_ptr = assoc_hash[inx];
 
 	while (assoc_ptr) {
-		if ((!assoc->user && assoc_ptr->user)
-		    && (assoc->uid == NO_VAL && assoc_ptr->uid != NO_VAL)) {
-			debug("we are looking for a "
-			       "nonuser association");
+		if ((!assoc->user && (assoc->uid == NO_VAL))
+		    && (assoc_ptr->user || (assoc_ptr->uid != NO_VAL))) {
+			debug("we are looking for a nonuser association");
 			goto next;
+		} else if ((!assoc_ptr->user && (assoc_ptr->uid == NO_VAL))
+			   && (assoc->user || (assoc->uid != NO_VAL))) {
+			debug("we are looking for a user association");
+			goto next;
+		} else if (assoc->user && assoc_ptr->user
+			   && ((assoc->uid == NO_VAL) ||
+			       (assoc_ptr->uid == NO_VAL))) {
+			/* This means the uid isn't set in one of the
+			 * associations, so use the name instead
+			 */
+			if (strcasecmp(assoc->user, assoc_ptr->user)) {
+				debug("2 not the right user %u != %u",
+				      assoc->uid, assoc_ptr->uid);
+				goto next;
+			}
 		} else if (assoc->uid != assoc_ptr->uid) {
 			debug("not the right user %u != %u",
 			       assoc->uid, assoc_ptr->uid);
@@ -757,11 +772,13 @@ static int _set_assoc_parent_and_user(slurmdb_association_rec_t *assoc,
 		uid_t pw_uid;
 
 		g_user_assoc_count++;
-		if (uid_from_string(assoc->user, &pw_uid) < 0)
-			assoc->uid = NO_VAL;
-		else
-			assoc->uid = pw_uid;
-
+		if (assoc->uid == NO_VAL || assoc->uid == INFINITE ||
+				assoc->uid == 0) {
+			if (uid_from_string(assoc->user, &pw_uid) < 0)
+				assoc->uid = NO_VAL;
+			else
+				assoc->uid = pw_uid;
+		}
 		_set_user_default_acct(assoc);
 
 		/* get the qos bitmap here */
@@ -1039,7 +1056,7 @@ static int _get_assoc_mgr_association_list(void *db_conn, int enforce)
 	slurmdb_association_cond_t assoc_q;
 	uid_t uid = getuid();
 	assoc_mgr_lock_t locks = { WRITE_LOCK, NO_LOCK,
-				   NO_LOCK, WRITE_LOCK, NO_LOCK, NO_LOCK };
+				   NO_LOCK, NO_LOCK, WRITE_LOCK, NO_LOCK };
 
 //	DEF_TIMERS;
 	assoc_mgr_lock(&locks);
@@ -1093,7 +1110,7 @@ static int _get_assoc_mgr_res_list(void *db_conn, int enforce)
 	slurmdb_res_cond_t res_q;
 	uid_t uid = getuid();
 	assoc_mgr_lock_t locks = { NO_LOCK, NO_LOCK,
-				   NO_LOCK, NO_LOCK, NO_LOCK, WRITE_LOCK };
+				   NO_LOCK, WRITE_LOCK, NO_LOCK, NO_LOCK };
 
 	assoc_mgr_lock(&locks);
 	if (assoc_mgr_res_list)
@@ -1168,7 +1185,7 @@ static int _get_assoc_mgr_user_list(void *db_conn, int enforce)
 	slurmdb_user_cond_t user_q;
 	uid_t uid = getuid();
 	assoc_mgr_lock_t locks = { NO_LOCK, NO_LOCK,
-				   NO_LOCK, WRITE_LOCK, NO_LOCK, NO_LOCK };
+				   NO_LOCK, NO_LOCK, WRITE_LOCK, NO_LOCK };
 
 	memset(&user_q, 0, sizeof(slurmdb_user_cond_t));
 	user_q.with_coords = 1;
@@ -1201,7 +1218,7 @@ static int _get_assoc_mgr_wckey_list(void *db_conn, int enforce)
 	slurmdb_wckey_cond_t wckey_q;
 	uid_t uid = getuid();
 	assoc_mgr_lock_t locks = { NO_LOCK, NO_LOCK,
-				   NO_LOCK, WRITE_LOCK, WRITE_LOCK, NO_LOCK };
+				   NO_LOCK, NO_LOCK, WRITE_LOCK, WRITE_LOCK };
 
 //	DEF_TIMERS;
 	assoc_mgr_lock(&locks);
@@ -1258,7 +1275,7 @@ static int _refresh_assoc_mgr_association_list(void *db_conn, int enforce)
 	ListIterator assoc_mgr_itr = NULL;
 	slurmdb_association_rec_t *curr_assoc = NULL, *assoc = NULL;
 	assoc_mgr_lock_t locks = { WRITE_LOCK, NO_LOCK,
-				   NO_LOCK, WRITE_LOCK, NO_LOCK, NO_LOCK };
+				   NO_LOCK, NO_LOCK, WRITE_LOCK, NO_LOCK };
 //	DEF_TIMERS;
 
 	memset(&assoc_q, 0, sizeof(slurmdb_association_cond_t));
@@ -1341,7 +1358,7 @@ static int _refresh_assoc_mgr_res_list(void *db_conn, int enforce)
 	List current_res = NULL;
 	uid_t uid = getuid();
 	assoc_mgr_lock_t locks = { NO_LOCK, NO_LOCK,
-				   NO_LOCK, NO_LOCK, NO_LOCK, WRITE_LOCK };
+				   NO_LOCK, WRITE_LOCK, NO_LOCK, NO_LOCK };
 
 	slurmdb_init_res_cond(&res_q, 0);
 	if (assoc_mgr_cluster_name) {
@@ -1418,7 +1435,7 @@ static int _refresh_assoc_mgr_user_list(void *db_conn, int enforce)
 	slurmdb_user_cond_t user_q;
 	uid_t uid = getuid();
 	assoc_mgr_lock_t locks = { NO_LOCK, NO_LOCK,
-				   NO_LOCK, WRITE_LOCK, NO_LOCK, NO_LOCK };
+				   NO_LOCK, NO_LOCK, WRITE_LOCK, NO_LOCK };
 
 	memset(&user_q, 0, sizeof(slurmdb_user_cond_t));
 	user_q.with_coords = 1;
@@ -1453,7 +1470,7 @@ static int _refresh_assoc_wckey_list(void *db_conn, int enforce)
 	List current_wckeys = NULL;
 	uid_t uid = getuid();
 	assoc_mgr_lock_t locks = { NO_LOCK, NO_LOCK,
-				   NO_LOCK, NO_LOCK, WRITE_LOCK, NO_LOCK };
+				   NO_LOCK, NO_LOCK, WRITE_LOCK, WRITE_LOCK };
 
 	memset(&wckey_q, 0, sizeof(slurmdb_wckey_cond_t));
 	if (assoc_mgr_cluster_name) {
@@ -1680,10 +1697,20 @@ extern void assoc_mgr_lock(assoc_mgr_lock_t *locks)
 	else if (locks->assoc == WRITE_LOCK)
 		_wr_wrlock(ASSOC_LOCK);
 
+	if (locks->file == READ_LOCK)
+		_wr_rdlock(FILE_LOCK);
+	else if (locks->file == WRITE_LOCK)
+		_wr_wrlock(FILE_LOCK);
+
 	if (locks->qos == READ_LOCK)
 		_wr_rdlock(QOS_LOCK);
 	else if (locks->qos == WRITE_LOCK)
 		_wr_wrlock(QOS_LOCK);
+
+	if (locks->res == READ_LOCK)
+		_wr_rdlock(RES_LOCK);
+	else if (locks->res == WRITE_LOCK)
+		_wr_wrlock(RES_LOCK);
 
 	if (locks->user == READ_LOCK)
 		_wr_rdlock(USER_LOCK);
@@ -1694,11 +1721,6 @@ extern void assoc_mgr_lock(assoc_mgr_lock_t *locks)
 		_wr_rdlock(WCKEY_LOCK);
 	else if (locks->wckey == WRITE_LOCK)
 		_wr_wrlock(WCKEY_LOCK);
-
-	if (locks->res == READ_LOCK)
-		_wr_rdlock(RES_LOCK);
-	else if (locks->res == WRITE_LOCK)
-		_wr_wrlock(RES_LOCK);
 }
 
 extern void assoc_mgr_unlock(assoc_mgr_lock_t *locks)
@@ -1713,20 +1735,25 @@ extern void assoc_mgr_unlock(assoc_mgr_lock_t *locks)
 	else if (locks->user == WRITE_LOCK)
 		_wr_wrunlock(USER_LOCK);
 
+	if (locks->res == READ_LOCK)
+		_wr_rdunlock(RES_LOCK);
+	else if (locks->res == WRITE_LOCK)
+		_wr_wrunlock(RES_LOCK);
+
 	if (locks->qos == READ_LOCK)
 		_wr_rdunlock(QOS_LOCK);
 	else if (locks->qos == WRITE_LOCK)
 		_wr_wrunlock(QOS_LOCK);
 
+	if (locks->file == READ_LOCK)
+		_wr_rdunlock(FILE_LOCK);
+	else if (locks->file == WRITE_LOCK)
+		_wr_wrunlock(FILE_LOCK);
+
 	if (locks->assoc == READ_LOCK)
 		_wr_rdunlock(ASSOC_LOCK);
 	else if (locks->assoc == WRITE_LOCK)
 		_wr_wrunlock(ASSOC_LOCK);
-
-	if (locks->res == READ_LOCK)
-		_wr_rdunlock(RES_LOCK);
-	else if (locks->res == WRITE_LOCK)
-		_wr_wrunlock(RES_LOCK);
 }
 
 extern assoc_mgr_association_usage_t *create_assoc_mgr_association_usage()
@@ -1855,7 +1882,7 @@ extern int assoc_mgr_fill_in_assoc(void *db_conn,
 	if (!assoc_mgr_association_list) {
 		int rc = SLURM_SUCCESS;
 
-		if (enforce & ACCOUNTING_ENFORCE_QOS) {
+		if (enforce & ACCOUNTING_ENFORCE_ASSOCS) {
 			error("No Association list available, "
 			      "this should never happen");
 			rc = SLURM_ERROR;
@@ -2038,7 +2065,7 @@ extern int assoc_mgr_fill_in_user(void *db_conn, slurmdb_user_rec_t *user,
 	ListIterator itr = NULL;
 	slurmdb_user_rec_t * found_user = NULL;
 	assoc_mgr_lock_t locks = { NO_LOCK, NO_LOCK,
-				   NO_LOCK, READ_LOCK, NO_LOCK, NO_LOCK };
+				   NO_LOCK, NO_LOCK, READ_LOCK, NO_LOCK };
 
 	if (user_pptr)
 		*user_pptr = NULL;
@@ -2237,7 +2264,7 @@ extern int assoc_mgr_fill_in_wckey(void *db_conn, slurmdb_wckey_rec_t *wckey,
 	slurmdb_wckey_rec_t * found_wckey = NULL;
 	slurmdb_wckey_rec_t * ret_wckey = NULL;
 	assoc_mgr_lock_t locks = { NO_LOCK, NO_LOCK,
-				   NO_LOCK, NO_LOCK, READ_LOCK, NO_LOCK };
+				   NO_LOCK, NO_LOCK, NO_LOCK, READ_LOCK };
 
 	if (wckey_pptr)
 		*wckey_pptr = NULL;
@@ -2401,7 +2428,7 @@ extern slurmdb_admin_level_t assoc_mgr_get_admin_level(void *db_conn,
 	ListIterator itr = NULL;
 	slurmdb_user_rec_t * found_user = NULL;
 	assoc_mgr_lock_t locks = { NO_LOCK, NO_LOCK,
-				   NO_LOCK, READ_LOCK, NO_LOCK, NO_LOCK };
+				   NO_LOCK, NO_LOCK, READ_LOCK, NO_LOCK };
 
 	if (!assoc_mgr_user_list)
 		if (_get_assoc_mgr_user_list(db_conn, 0) == SLURM_ERROR)
@@ -2435,7 +2462,7 @@ extern bool assoc_mgr_is_user_acct_coord(void *db_conn,
 	slurmdb_coord_rec_t *acct = NULL;
 	slurmdb_user_rec_t * found_user = NULL;
 	assoc_mgr_lock_t locks = { NO_LOCK, NO_LOCK,
-				   NO_LOCK, READ_LOCK, NO_LOCK, NO_LOCK };
+				   NO_LOCK, NO_LOCK, READ_LOCK, NO_LOCK };
 
 	if (!acct_name)
 		return false;
@@ -2723,7 +2750,7 @@ extern int assoc_mgr_update_assocs(slurmdb_update_object_t *update)
 	List remove_list = NULL;
 	List update_list = NULL;
 	assoc_mgr_lock_t locks = { WRITE_LOCK, NO_LOCK,
-				   WRITE_LOCK, WRITE_LOCK, NO_LOCK, NO_LOCK };
+				   WRITE_LOCK, NO_LOCK, WRITE_LOCK, NO_LOCK };
 
 	assoc_mgr_lock(&locks);
 	if (!assoc_mgr_association_list) {
@@ -3101,7 +3128,7 @@ extern int assoc_mgr_update_wckeys(slurmdb_update_object_t *update)
 	int rc = SLURM_SUCCESS;
 	uid_t pw_uid;
 	assoc_mgr_lock_t locks = { NO_LOCK, NO_LOCK,
-				   NO_LOCK, WRITE_LOCK, WRITE_LOCK, NO_LOCK };
+				   NO_LOCK, NO_LOCK, WRITE_LOCK, WRITE_LOCK };
 
 	assoc_mgr_lock(&locks);
 	if (!assoc_mgr_wckey_list) {
@@ -3222,7 +3249,7 @@ extern int assoc_mgr_update_users(slurmdb_update_object_t *update)
 	int rc = SLURM_SUCCESS;
 	uid_t pw_uid;
 	assoc_mgr_lock_t locks = { WRITE_LOCK, NO_LOCK,
-				   NO_LOCK, WRITE_LOCK, WRITE_LOCK, NO_LOCK };
+				   NO_LOCK, NO_LOCK, WRITE_LOCK, WRITE_LOCK };
 
 	assoc_mgr_lock(&locks);
 	if (!assoc_mgr_user_list) {
@@ -3652,7 +3679,7 @@ extern int assoc_mgr_update_res(slurmdb_update_object_t *update)
 	ListIterator itr = NULL;
 	int rc = SLURM_SUCCESS;
 	assoc_mgr_lock_t locks = { NO_LOCK, NO_LOCK,
-				   NO_LOCK, NO_LOCK, NO_LOCK, WRITE_LOCK };
+				   NO_LOCK, WRITE_LOCK, NO_LOCK, NO_LOCK };
 
 	assoc_mgr_lock(&locks);
 	if (!assoc_mgr_res_list) {
@@ -4596,7 +4623,7 @@ extern int assoc_mgr_set_missing_uids()
 	uid_t pw_uid;
 	ListIterator itr = NULL;
 	assoc_mgr_lock_t locks = { WRITE_LOCK, NO_LOCK,
-				   NO_LOCK, WRITE_LOCK, WRITE_LOCK, NO_LOCK };
+				   NO_LOCK, NO_LOCK, WRITE_LOCK, WRITE_LOCK };
 
 	assoc_mgr_lock(&locks);
 	if (assoc_mgr_association_list) {

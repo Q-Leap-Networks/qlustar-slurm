@@ -950,6 +950,27 @@ static int _task_layout_lllp_cyclic(launch_tasks_request_msg_t *req,
 
 			if (++p < req->cpus_per_task)
 				continue;
+
+			/* Means we are binding to cores so skip the
+			   rest of the threads in this one.  If a user
+			   requests ntasks-per-core=1 and the
+			   cpu_bind=threads this will not be able to
+			   work since we don't know how many tasks per
+			   core have been allocated.
+			*/
+			if (!(req->cpu_bind_type & CPU_BIND_ONE_THREAD_PER_CORE)
+			    && ((req->cpu_bind_type & CPU_BIND_TO_CORES)
+				|| (slurm_get_select_type_param() &
+				    CR_ONE_TASK_PER_CORE))) {
+				int threads_not_used;
+				if (req->cpus_per_task < hw_threads)
+					threads_not_used =
+						hw_threads - req->cpus_per_task;
+				else
+					threads_not_used =
+						req->cpus_per_task % hw_threads;
+				socket_last_pu[s] += threads_not_used;
+			}
 			p = 0;
 
 			if (!already_switched) {
@@ -1058,6 +1079,26 @@ static int _task_layout_lllp_block(launch_tasks_request_msg_t *req,
 
 			if (++c < req->cpus_per_task)
 				continue;
+			/* Means we are binding to cores so skip the
+			   rest of the threads in this one.  If a user
+			   requests ntasks-per-core=1 and the
+			   cpu_bind=threads this will not be able to
+			   work since we don't know how many tasks per
+			   core have been allocated.
+			*/
+			if (!(req->cpu_bind_type & CPU_BIND_ONE_THREAD_PER_CORE)
+			    && ((req->cpu_bind_type & CPU_BIND_TO_CORES)
+				|| (slurm_get_select_type_param() &
+				    CR_ONE_TASK_PER_CORE))) {
+				int threads_not_used;
+				if (req->cpus_per_task < hw_threads)
+					threads_not_used =
+						hw_threads - req->cpus_per_task;
+				else
+					threads_not_used =
+						req->cpus_per_task % hw_threads;
+				i += threads_not_used;
+			}
 			c = 0;
 			if (++taskcount >= max_tasks)
 				break;

@@ -429,20 +429,21 @@ Display help information and exit.
 
 .TP
 \fB\-\-hint\fR=<\fItype\fR>
-Bind tasks according to application hints
+Bind tasks according to application hints.
 .RS
 .TP
 .B compute_bound
 Select settings for compute bound applications:
-use all cores in each socket, one thread per core
+use all cores in each socket, one thread per core.
 .TP
 .B memory_bound
 Select settings for memory bound applications:
-use only one core in each socket, one thread per core
+use only one core in each socket, one thread per core.
 .TP
 .B [no]multithread
 [don't] use extra threads with in-core multi-threading
-which can benefit communication intensive applications
+which can benefit communication intensive applications.
+Only supported with the task/affinity plugin.
 .TP
 .B help
 show this help message
@@ -1176,7 +1177,7 @@ send it the signal \fIsig_num\fR.
 Due to the resolution of event handling by SLURM, the signal may
 be sent up to 60 seconds earlier than specified.
 \fIsig_num\fR may either be a signal number or name (e.g. "10" or "USR1").
-\fIsig_time\fR must have integer value between zero and 65535.
+\fIsig_time\fR must have an integer value between 0 and 65535.
 By default, no signal is sent before the job's end time.
 If a \fIsig_num\fR is specified without any \fIsig_time\fR,
 the default time will be 60 seconds.

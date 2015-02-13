@@ -5,7 +5,7 @@
  *****************************************************************************
  *  Copyright (C) 2002-2007 The Regents of the University of California.
  *  Copyright (C) 2008-2010 Lawrence Livermore National Security.
- *  Portions Copyright (C) 2010-2014 SchedMD <http://www.schedmd.com>.
+ *  Portions Copyright (C) 2010-2015 SchedMD <http://www.schedmd.com>.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Morris Jette <jette1@llnl.gov>
  *  CODE-OCEC-09-009. All rights reserved.
@@ -255,6 +255,7 @@ static void _kill_dependent(struct job_record *);
 static void _resp_array_add(resp_array_struct_t **resp,
 			    struct job_record *job_ptr, uint32_t rc)
 {
+	slurm_ctl_conf_t *conf;
 	resp_array_struct_t *loc_resp;
 	int array_size;
 	int i;
@@ -264,6 +265,12 @@ static void _resp_array_add(resp_array_struct_t **resp,
 		error("_resp_array_add called for non-job array %u",
 		      job_ptr->job_id);
 		return;
+	}
+
+	if (max_array_size == NO_VAL) {
+		conf = slurm_conf_lock();
+		max_array_size = conf->max_array_sz;
+		slurm_conf_unlock();
 	}
 
 	xassert(resp);
@@ -1091,7 +1098,11 @@ static void _dump_job_state(struct job_record *dump_job_ptr, Buf buffer)
 	pack32(dump_job_ptr->array_task_id, buffer);
 	if (dump_job_ptr->array_recs) {
 		build_array_str(dump_job_ptr);
-		tmp_32 = bit_size(dump_job_ptr->array_recs->task_id_bitmap);
+		if (dump_job_ptr->array_recs->task_id_bitmap) {
+			tmp_32 = bit_size(dump_job_ptr->array_recs->
+					  task_id_bitmap);
+		} else
+			tmp_32 = 0;
 		pack32(tmp_32, buffer);
 		if (tmp_32)
 			packstr(dump_job_ptr->array_recs->task_id_str, buffer);
@@ -1280,7 +1291,10 @@ static int _load_job_state(Buf buffer, uint16_t protocol_version)
 		/* Job Array record */
 		safe_unpack32(&task_id_size, buffer);
 		if (task_id_size != NO_VAL) {
-			safe_unpackstr_xmalloc(&task_id_str, &name_len, buffer);
+			if (task_id_size) {
+				safe_unpackstr_xmalloc(&task_id_str, &name_len,
+						       buffer);
+			}
 			safe_unpack32(&array_flags,    buffer);
 			safe_unpack32(&max_run_tasks,  buffer);
 			safe_unpack32(&tot_run_tasks,  buffer);
@@ -2454,7 +2468,8 @@ extern void build_array_str(struct job_record *job_ptr)
 {
 	job_array_struct_t *array_recs = job_ptr->array_recs;
 
-	if (!array_recs || array_recs->task_id_str || !array_recs->task_cnt)
+	if (!array_recs || array_recs->task_id_str || !array_recs->task_cnt ||
+	    !array_recs->task_id_bitmap)
 		return;
 
 	array_recs->task_id_str = bit_fmt_hexmask(array_recs->task_id_bitmap);
@@ -3491,8 +3506,11 @@ struct job_record *_job_rec_copy(struct job_record *job_ptr)
 	job_ptr_pend->array_recs = job_ptr->array_recs;
 	job_ptr->array_recs = NULL;
 
-	bit_clear(job_ptr_pend->array_recs->task_id_bitmap,
-		  job_ptr_pend->array_task_id);
+	if (job_ptr_pend->array_recs &&
+	    job_ptr_pend->array_recs->task_id_bitmap) {
+		bit_clear(job_ptr_pend->array_recs->task_id_bitmap,
+			  job_ptr_pend->array_task_id);
+	}
 	xfree(job_ptr_pend->array_recs->task_id_str);
 	job_ptr_pend->array_recs->task_cnt--;
 	job_ptr_pend->array_task_id = NO_VAL;
@@ -7422,7 +7440,7 @@ void pack_job(struct job_record *dump_job_ptr, uint16_t show_flags, Buf buffer,
 	time_t begin_time = 0;
 	char *nodelist = NULL;
 	assoc_mgr_lock_t locks = { NO_LOCK, NO_LOCK,
-				   READ_LOCK, NO_LOCK, NO_LOCK };
+				   READ_LOCK, NO_LOCK, NO_LOCK, NO_LOCK };
 
 	if (protocol_version >= SLURM_14_11_PROTOCOL_VERSION) {
 		detail_ptr = dump_job_ptr->details;
@@ -7878,7 +7896,7 @@ static void _pack_default_job_details(struct job_record *job_ptr,
 		else if (job_ptr->part_ptr->max_share == 0)
 			shared = 0;		/* Partition Shared=exclusive */
 		else
-			shared = 0;		/* Part Shared=yes or no */
+			shared = (uint16_t) NO_VAL;  /* Part Shared=yes or no */
 	} else
 		shared = (uint16_t) NO_VAL;	/* No user or partition info */
 
@@ -12234,7 +12252,6 @@ extern int job_suspend2(suspend_msg_t *sus_ptr, uid_t uid,
 			slurm_fd_t conn_fd, bool indf_susp,
 			uint16_t protocol_version)
 {
-	static uint32_t max_array_size = NO_VAL;
 	slurm_ctl_conf_t *conf;
 	int rc = SLURM_SUCCESS, rc2;
 	struct job_record *job_ptr = NULL;
@@ -12568,7 +12585,6 @@ extern int job_requeue2(uid_t uid, requeue_msg_t *req_ptr,
                        slurm_fd_t conn_fd, uint16_t protocol_version,
                        bool preempt)
 {
-	static uint32_t max_array_size = NO_VAL;
 	slurm_ctl_conf_t *conf;
 	int rc = SLURM_SUCCESS, rc2;
 	struct job_record *job_ptr = NULL;
@@ -13686,9 +13702,12 @@ extern void job_hold_requeue(struct job_record *job_ptr)
 
 	state = job_ptr->job_state;
 
-	if (! (state & JOB_SPECIAL_EXIT)
-	    && ! (state & JOB_REQUEUE))
+	if (! (state & JOB_REQUEUE))
 		return;
+
+	/* Sent event requeue to the database.
+	 */
+	jobacct_storage_g_job_complete(acct_db_conn, job_ptr);
 
 	debug("%s: job %u state 0x%x", __func__, job_ptr->job_id, state);
 
@@ -13843,6 +13862,7 @@ _set_job_requeue_exit_value(struct job_record *job_ptr)
 			 */
 			debug2("%s: job %d exit code %d state JOB_SPECIAL_EXIT",
 			       __func__, job_ptr->job_id, exit_code);
+			job_ptr->job_state |= JOB_REQUEUE;
 			job_ptr->job_state |= JOB_SPECIAL_EXIT;
 			return;
 		}
@@ -13875,12 +13895,16 @@ jobid2str(struct job_record *job_ptr, char *buf)
 	if (buf == NULL)
 		return "jobid2str: Invalid buf argument";
 
-	if (job_ptr->array_task_id == NO_VAL) {
+	if (job_ptr->array_recs && (job_ptr->array_task_id == NO_VAL)) {
+		sprintf(buf, "JobID=%u_* State=0x%x NodeCnt=%u",
+			job_ptr->job_id, job_ptr->job_state,
+			job_ptr->node_cnt);
+	} else if (job_ptr->array_task_id == NO_VAL) {
 		sprintf(buf, "JobID=%u State=0x%x NodeCnt=%u",
 			job_ptr->job_id, job_ptr->job_state,
 			job_ptr->node_cnt);
 	} else {
-		sprintf(buf, "JobID=%u_%u (%u) State=0x%x NodeCnt=%u",
+		sprintf(buf, "JobID=%u_%u(%u) State=0x%x NodeCnt=%u",
 			job_ptr->array_job_id, job_ptr->array_task_id,
 			job_ptr->job_id, job_ptr->job_state,job_ptr->node_cnt);
 	}
@@ -13931,6 +13955,8 @@ extern void job_array_post_sched(struct job_record *job_ptr)
 		/* Preserve array_recs for min/max exit codes for job array */
 		if (job_ptr->array_recs->task_cnt) {
 			job_ptr->array_recs->task_cnt--;
+		} else if (job_ptr->restart_cnt) {
+			/* Last task of a job array has been requeued */
 		} else {
 			error("job %u_%u array_recs task count underflow",
 			      job_ptr->array_job_id, job_ptr->array_task_id);

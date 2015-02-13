@@ -642,9 +642,9 @@ _send_slurmstepd_init(int fd, slurmd_step_type_t type, void *req,
 	if (!user_name) {
 #endif
 		/* send cached group ids array for the relevant uid */
-		debug3("%s: call to getpwuid_r", __func__);
-		if (getpwuid_r(uid, &pwd, pwd_buffer, PW_BUF_SIZE,
-			       &pwd_result) || (pwd_result == NULL)) {
+		debug3("_send_slurmstepd_init: call to getpwuid_r");
+		if (slurm_getpwuid_r(uid, &pwd, pwd_buffer, PW_BUF_SIZE,
+				     &pwd_result) || (pwd_result == NULL)) {
 			error("%s: getpwuid_r: %m", __func__);
 			len = 0;
 			safe_write(fd, &len, sizeof(int));
@@ -1329,9 +1329,9 @@ _get_user_env(batch_job_launch_msg_t *req)
 	if (i >= req->envc)
 		return;		/* don't need to load env */
 
-	if (getpwuid_r(req->uid, &pwd, pwd_buf, PW_BUF_SIZE, &pwd_ptr) ||
-	    (pwd_ptr == NULL)) {
-		error("getpwuid_r(%u):%m", req->uid);
+	if (slurm_getpwuid_r(req->uid, &pwd, pwd_buf, PW_BUF_SIZE, &pwd_ptr)
+	    || (pwd_ptr == NULL)) {
+		error("%s: getpwuid_r(%u):%m", __func__, req->uid);
 	} else {
 		verbose("get env for user %s here", pwd.pw_name);
 		/* Permit up to 120 second delay before using cache file */
@@ -4854,6 +4854,7 @@ static void *_prolog_timer(void *x)
 static int
 _run_prolog(job_env_t *job_env)
 {
+	DEF_TIMERS;
 	int rc, diff_time;
 	char *my_prolog;
 	time_t start_time = time(NULL);
@@ -4883,14 +4884,19 @@ _run_prolog(job_env_t *job_env)
 	timer_struct.timer_cond  = &timer_cond;
 	timer_struct.timer_mutex = &timer_mutex;
 	pthread_create(&timer_id, &timer_attr, &_prolog_timer, &timer_struct);
+	START_TIMER;
 	rc = _run_job_script("prolog", my_prolog, job_env->jobid,
 			     -1, my_env, job_env->uid);
+	END_TIMER;
+	info("%s: run job script took %s", __func__, TIME_STR);
 	slurm_mutex_lock(&timer_mutex);
 	prolog_fini = true;
 	pthread_cond_broadcast(&timer_cond);
 	slurm_mutex_unlock(&timer_mutex);
 
 	diff_time = difftime(time(NULL), start_time);
+	info("%s: prolog with lock for job %u ran for %d seconds",
+	     __func__, job_env->jobid, diff_time);
 	if (diff_time >= (msg_timeout / 2)) {
 		info("prolog for job %u ran for %d seconds",
 		     job_env->jobid, diff_time);

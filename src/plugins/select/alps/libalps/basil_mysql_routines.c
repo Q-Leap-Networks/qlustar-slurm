@@ -17,6 +17,7 @@ static int cray_get_options_from_default_conf(MYSQL *handle)
 		"/etc/my.cnf",
 		"/etc/opt/cray/MySQL/my.cnf",
 		"/etc/mysql/my.cnf",
+		"/root/.my.cnf",
 		NULL
 	};
 

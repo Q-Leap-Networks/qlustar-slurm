@@ -179,6 +179,7 @@ static void _job_timed_out(struct job_record *job_ptr);
 static int  _job_create(job_desc_msg_t * job_specs, int allocate, int will_run,
 			struct job_record **job_rec_ptr, uid_t submit_uid,
 			char **err_msg, uint16_t protocol_version);
+static void _kill_dependent(struct job_record *job_ptr);
 static void _list_delete_job(void *job_entry);
 static int  _list_find_job_id(void *job_entry, void *key);
 static int  _list_find_job_old(void *job_entry, void *key);
@@ -219,7 +220,7 @@ static job_array_resp_msg_t *_resp_array_xlate(resp_array_struct_t *resp,
 static int  _resume_job_nodes(struct job_record *job_ptr, bool indf_susp);
 static void _send_job_kill(struct job_record *job_ptr);
 static int  _set_job_id(struct job_record *job_ptr);
-static void  _set_job_requeue_exit_value(struct job_record *job_ptr);
+static void _set_job_requeue_exit_value(struct job_record *job_ptr);
 static void _signal_batch_job(struct job_record *job_ptr,
 			      uint16_t signal,
 			      uint16_t flags);
@@ -245,7 +246,6 @@ static int  _write_data_to_file(char *file_name, char *data);
 static int  _write_data_array_to_file(char *file_name, char **data,
 				      uint32_t size);
 static void _xmit_new_end_time(struct job_record *job_ptr);
-static void _kill_dependent(struct job_record *);
 
 /*
  * Functions used to manage job array responses with a separate return code
@@ -3495,9 +3495,13 @@ struct job_record *_job_rec_copy(struct job_record *job_ptr)
 	job_ptr_pend->job_id   = save_job_id;
 	job_ptr_pend->job_next = save_job_next;
 	job_ptr_pend->details  = save_details;
-	job_ptr_pend->prio_factors = save_prio_factors;
 	job_ptr_pend->step_list = save_step_list;
 	job_ptr_pend->db_index = save_db_index;
+
+	job_ptr_pend->prio_factors = save_prio_factors;
+	if (job_ptr_pend->prio_factors && job_ptr->prio_factors)
+		memcpy(job_ptr_pend->prio_factors, job_ptr->prio_factors,
+				sizeof(priority_factors_object_t));
 
 	job_ptr_pend->account = xstrdup(job_ptr->account);
 	job_ptr_pend->alias_list = xstrdup(job_ptr->alias_list);
@@ -4215,6 +4219,19 @@ extern int job_str_signal(char *job_id_str, uint16_t signal, uint16_t flags,
 		if (!job_ptr && !job_ptr_done) {
 			info("%s: 2 invalid job id %u", __func__, job_id);
 			return ESLURM_INVALID_JOB_ID;
+		}
+		while (job_ptr) {
+			if (job_ptr->array_job_id == job_id)
+				break;
+			job_ptr = job_ptr->job_array_next_j;
+		}
+		if (job_ptr && (job_ptr->user_id != uid) &&
+		    !validate_operator(uid) &&
+		    !assoc_mgr_is_user_acct_coord(acct_db_conn, uid,
+						  job_ptr->account)) {
+			error("Security violation, REQUEST_KILL_JOB RPC for "
+			      "jobID %u from uid %d", job_ptr->job_id, uid);
+			return ESLURM_ACCESS_DENIED;
 		}
 		while (job_ptr) {
 			if ((job_ptr->array_job_id == job_id) &&
@@ -7480,8 +7497,8 @@ void pack_job(struct job_record *dump_job_ptr, uint16_t show_flags, Buf buffer,
 			pack_time(dump_job_ptr->details->submit_time, buffer);
 			/* Earliest possible begin time */
 			begin_time = dump_job_ptr->details->begin_time;
-		} else {
-			pack16(0, buffer);
+		} else {   /* Some job details may be purged after completion */
+			pack16(NICE_OFFSET, buffer);	/* Best guess */
 			pack_time((time_t) 0, buffer);
 		}
 
@@ -11531,8 +11548,7 @@ extern bool job_array_start_test(struct job_record *job_ptr)
 			return false;
 		}
 	}
-	if (job_ptr->details && !job_ptr->details->begin_time)
-		job_ptr->details->begin_time = now;
+
 	return true;
 }
 
@@ -11664,6 +11680,10 @@ extern bool job_independent(struct job_record *job_ptr, int will_run)
 	 * job records get purged (e.g. afterok, afternotok) */
 	depend_rc = test_job_dependency(job_ptr);
 	if (depend_rc == 1) {
+		/* start_time has passed but still has dependency which
+		 * makes it ineligible */
+		if (detail_ptr->begin_time < now)
+			detail_ptr->begin_time = 0;
 		job_ptr->state_reason = WAIT_DEPENDENCY;
 		xfree(job_ptr->state_desc);
 		return false;
@@ -12407,9 +12427,8 @@ extern int job_suspend2(suspend_msg_t *sus_ptr, uid_t uid,
 static int _job_requeue(uid_t uid, struct job_record *job_ptr, bool preempt,
 			uint32_t state)
 {
-	bool suspended = false;
+	bool is_running = false, is_suspended = false;
 	time_t now = time(NULL);
-	bool is_running;
 
 	/* validate the request */
 	if ((uid != job_ptr->user_id) && !validate_operator(uid) &&
@@ -12427,21 +12446,7 @@ static int _job_requeue(uid_t uid, struct job_record *job_ptr, bool preempt,
 		return ESLURM_DISABLED;
 	}
 
-	/* In the job is in the process of completing
-	 * return SLURM_SUCCESS and set the status
-	 * to JOB_PENDING since we support requeue
-	 * of done/exit/exiting jobs.
-	 */
-	if (IS_JOB_COMPLETING(job_ptr)) {
-		uint32_t flags;
-		flags = job_ptr->job_state & JOB_STATE_FLAGS;
-		job_ptr->job_state = JOB_PENDING | flags;
-		return SLURM_SUCCESS;
-	}
-
-	/* If the job is already pending do nothing
-	 * and return  is well to the library.
-	 */
+	/* If the job is already pending, just return an error. */
 	if (IS_JOB_PENDING(job_ptr))
 		return ESLURM_JOB_PENDING;
 
@@ -12453,6 +12458,18 @@ static int _job_requeue(uid_t uid, struct job_record *job_ptr, bool preempt,
 	slurm_sched_g_requeue(job_ptr, "Job requeued by user/admin");
 	last_job_update = now;
 
+	/* In the job is in the process of completing
+	 * return SLURM_SUCCESS and set the status
+	 * to JOB_PENDING since we support requeue
+	 * of done/exit/exiting jobs.
+	 */
+	if (IS_JOB_COMPLETING(job_ptr)) {
+		uint32_t flags;
+		flags = job_ptr->job_state & JOB_STATE_FLAGS;
+		job_ptr->job_state = JOB_PENDING | flags;
+		goto reply;
+	}
+
 	if (IS_JOB_SUSPENDED(job_ptr)) {
 		enum job_states suspend_job_state = job_ptr->job_state;
 		/* we can't have it as suspended when we call the
@@ -12461,11 +12478,11 @@ static int _job_requeue(uid_t uid, struct job_record *job_ptr, bool preempt,
 		job_ptr->job_state = JOB_REQUEUE;
 		jobacct_storage_g_job_suspend(acct_db_conn, job_ptr);
 		job_ptr->job_state = suspend_job_state;
-		suspended = true;
+		is_suspended = true;
 	}
 
 	job_ptr->time_last_active  = now;
-	if (suspended)
+	if (is_suspended)
 		job_ptr->end_time = job_ptr->suspend_time;
 	else
 		job_ptr->end_time = now;
@@ -12474,7 +12491,6 @@ static int _job_requeue(uid_t uid, struct job_record *job_ptr, bool preempt,
 	 * we deallocate the nodes if is in
 	 * running state.
 	 */
-	is_running = false;
 	if (IS_JOB_SUSPENDED(job_ptr) || IS_JOB_RUNNING(job_ptr))
 		is_running = true;
 
@@ -12489,7 +12505,7 @@ static int _job_requeue(uid_t uid, struct job_record *job_ptr, bool preempt,
 	 * JOB_COMPLETING is needed to properly clean up steps. */
 	if (is_running) {
 		job_ptr->job_state |= JOB_COMPLETING;
-		deallocate_nodes(job_ptr, false, suspended, preempt);
+		deallocate_nodes(job_ptr, false, is_suspended, preempt);
 		job_ptr->job_state &= (~JOB_COMPLETING);
 	}
 
@@ -12503,6 +12519,7 @@ static int _job_requeue(uid_t uid, struct job_record *job_ptr, bool preempt,
 	if (job_ptr->node_cnt)
 		job_ptr->job_state |= JOB_COMPLETING;
 
+reply:
 	job_ptr->pre_sus_time = (time_t) 0;
 	job_ptr->suspend_time = (time_t) 0;
 	job_ptr->tot_sus_time = (time_t) 0;

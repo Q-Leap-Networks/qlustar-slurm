@@ -1,5 +1,72 @@
-This file describes changes in recent versions of Slurm. It primarily
+ This file describes changes in recent versions of Slurm. It primarily
 documents those changes that are of interest to users and administrators.
+
+* Changes in Slurm 14.11.5
+==========================
+ -- Correct the squeue command taking into account that a node can
+    have NULL name if it is not in DNS but still in slurm.conf.
+ -- Fix slurmdbd regression which would cause a segfault when a node is set
+    down with no reason.
+ -- BGQ - Fix issue with job arrays not being handled correctly
+    in the runjob_mux plugin.
+ -- Print FAIR_TREE, if configured, in "scontrol show config" output for
+    PriorityFlags.
+ -- Add SLURM_JOB_GPUS environment variable to those available in the Prolog.
+ -- Load lua-5.2 library if using lua5.2 for lua job submit plugin.
+ -- GRES logic: Prevent bad node_offset due to not preserving no_consume flag.
+ -- Fix wrong variables used in the wrapper functions needed for systems that
+    don't support strong_alias
+ -- Fix code for apple computers SOL_TCP is not defined
+ -- Cray/BASIL - Check for mysql credentials in /root/.my.cnf.
+ -- Fix sprio showing wrong priority for job arrays until priority is
+    recalculated.
+ -- Account to batch step all CPUs that are allocated to a job not
+    just one since the batch step has access to all CPUs like other steps.
+ -- Fix job getting EligibleTime set before meeting dependency requirements.
+ -- Correct the initialization of QOS MinCPUs per job limit.
+ -- Set the debug level of information messages in cgroup plugin to debug2.
+ -- For job running under a debugger, if the exec of the task fails, then
+    cancel its I/O and abort immediately rather than waiting 60 seconds for
+    I/O timeout.
+ -- Fix associations not getting default qos set until after a restart.
+ -- Set the value of total_cpus not to be zero before invoking
+    acct_policy_job_runnable_post_select.
+ -- MySQL - When requesting cluster resources, only return resources for the
+    cluster(s) requested.
+ -- Add TaskPluginParam=autobind=threads option to set a default binding in the
+    case that "auto binding" doesn't find a match.
+ -- Introduce a new SchedulerParameters variable nohold_on_prolog_fail.
+    If configured don't requeue jobs on hold is a Prolog fails.
+ -- Make it so sched_params isn't read over and over when an epilog complete
+    message comes in
+ -- Fix squeue -L <licenses> not filtering out jobs with licenses.
+ -- Changed the implementation of xcpuinfo_abs_to_mac() be identical
+    _abs_to_mac() to fix CPUs allocation using cpuset cgroup.
+ -- Improve the explanation of the unbuffered feature in the
+    srun man page.
+ -- Make taskplugin=cgroup work for core spec.  needed to have task/cgroup
+    before.
+ -- Fix reports not using the month usage table.
+ -- BGQ - Sanity check given for translating small blocks into slurm bg_records.
+ -- Fix bug preventing the requeue/hold or requeue/special_exit of job from the
+    completing state.
+ -- Cray - Fix for launching batch step within an existing job allocation.
+ -- Cray - Add ALPS_APP_ID_ENV environment variable.
+ -- Increase maximum MaxArraySize configuration parameter value from 1,000,001
+    to 4,000,001.
+ -- Added new SchedulerParameters value of bf_min_age_reserve. The backfill
+    scheduler will not reserve resources for pending jobs until they have
+    been pending for at least the specified number of seconds. This can be
+    valuable if jobs lack time limits or all time limits have the same value.
+ -- Fix support for --mem=0 (all memory of a node) with select/cons_res plugin.
+ -- Fix bug that can permit someone to kill job array belonging to another user.
+ -- Don't set the default partition on a license only reservation.
+ -- Show a NodeCnt=0, instead of NO_VAL, in "scontrol show res" for a license
+    only reservation.
+ -- BGQ - When using static small blocks make sure when clearing the job the
+    block is set up to it's original state.
+ -- Start job allocation using lowest numbered sockets for block task
+    distribution for consistency with cyclic distribution.
 
 * Changes in Slurm 14.11.4
 ==========================
@@ -66,6 +133,8 @@ documents those changes that are of interest to users and administrators.
  -- Fix issue with "sreport cluster AccountUtilizationByUser" when using
     PrivateData=users.
  -- Fix perlapi tests for libslurm perl module.
+ -- MySQL - Fix potential issue when PrivateData=Usage and a normal user
+    runs certain sreport reports.
 
 * Changes in Slurm 14.11.3
 ==========================
@@ -484,6 +553,7 @@ documents those changes that are of interest to users and administrators.
     differ.
  -- Use the slurm_getpwuid_r wrapper of getpwuid_r to handle possible
     interrupts.
+ -- Allow --ignore-pbs to take effect when read as an #SBATCH argument.
 
 * Changes in Slurm 14.03.11
 ===========================

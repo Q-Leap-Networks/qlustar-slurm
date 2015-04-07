@@ -274,12 +274,6 @@ By default, a job step has access to every CPU allocated to the job.
 To ensure that distinct CPUs are allocated to each job step, use the
 \fB\-\-exclusive\fR option.
 
-If the job step allocation includes an allocation with a number of
-sockets, cores, or threads equal to the number of tasks times cpus\-per\-task,
-then the tasks will by default be bound to the appropriate resources (auto
-binding). Disable this mode of operation by explicitly setting
-"-\-cpu_bind=none".
-
 Note that a job step can be allocated different numbers of CPUs on each node
 or be allocated CPUs not starting at location zero. Therefore one of the
 options which automatically generate the task binding is recommended.
@@ -290,6 +284,20 @@ Binding a task to a NUMA locality domain means to bind the task to the set of
 CPUs that belong to the NUMA locality domain or "NUMA node".
 If NUMA locality domain options are used on systems with no NUMA support, then
 each socket is considered a locality domain.
+
+.PD
+.RS
+.TP
+\fBAuto Binding\fR
+Applies only when task/affinity is enabled. If the job step allocation includes an
+allocation with a number of
+sockets, cores, or threads equal to the number of tasks times cpus\-per\-task,
+then the tasks will by default be bound to the appropriate resources (auto
+binding). Disable this mode of operation by explicitly setting
+"-\-cpu_bind=none". Use TaskPluginParam=autobind=threads to set
+a default cpu binding in case "auto binding" doesn't find a match.
+.RE
+.RS
 
 Supported options include:
 .PD 1
@@ -376,6 +384,7 @@ task/cgroup plugin only.
 .TP
 .B help
 Show help message for cpu_bind
+.RE
 .RE
 
 .TP
@@ -1603,9 +1612,11 @@ Specify a minimum amount of temporary disk space.
 
 .TP
 \fB\-u\fR, \fB\-\-unbuffered\fR
-By default the task launched by srun uses the buffering of its runtime
-environment, e.g. in glibc the stdout is line buffered and stderr is unbuffered.
-This option causes the stdout of the task to be line buffered.
+By default the connection between slurmdstepd and the user launched application
+is over a pipe. The stdio output written by the application is buffered
+by the glibc until it is flushed or the output is set as unbuffered.
+See setbuf(3).If this option is specified the tasks are executed with
+a pseudo terminal so that the application output is unbuffered.
 .TP
 \fB\-\-usage\fR
 Display brief help message and exit.
@@ -1650,8 +1661,6 @@ Unless constrained by the maximum node count, the job will contain
 The list may be specified as a comma\-separated list of hosts, a range of hosts
 (host[1\-5,7,...] for example), or a filename.
 The host list will be assumed to be a filename if it contains a "/" character.
-If you specify a maximum node count and the host list contains more nodes, the
-extra node names will be silently ignored.
 If you specify a minimum node or processor count larger than can be satisfied
 by the supplied host list, additional resources will be allocated on other
 nodes as needed.

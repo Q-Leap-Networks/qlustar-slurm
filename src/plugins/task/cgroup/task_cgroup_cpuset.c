@@ -902,7 +902,7 @@ again:
 
 	/* build job step cgroup relative path (should not be) */
 	if (*jobstep_cgroup_path == '\0') {
-		if (stepid == NO_VAL) {
+		if (stepid == SLURM_BATCH_SCRIPT) {
 			if (snprintf(jobstep_cgroup_path, PATH_MAX,
 				     "%s/step_batch", job_cgroup_path)
 			    >= PATH_MAX) {
@@ -953,12 +953,12 @@ again:
 	debug("task/cgroup: step abstract cores are '%s'",
 	      job->step_alloc_cores);
 	if (xcpuinfo_abs_to_mac(job->job_alloc_cores,
-			&job_alloc_cores) != SLURM_SUCCESS) {
+				&job_alloc_cores) != SLURM_SUCCESS) {
 		error("task/cgroup: unable to build job physical cores");
 		goto error;
 	}
 	if (xcpuinfo_abs_to_mac(job->step_alloc_cores,
-			&step_alloc_cores) != SLURM_SUCCESS) {
+				&step_alloc_cores) != SLURM_SUCCESS) {
 		error("task/cgroup: unable to build step physical cores");
 		goto error;
 	}

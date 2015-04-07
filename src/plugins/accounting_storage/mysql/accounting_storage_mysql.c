@@ -524,7 +524,7 @@ static int _as_mysql_acct_check_tables(mysql_conn_t *mysql_conn)
 		{ "priority", "int unsigned default 0" },
 		{ "usage_factor", "double default 1.0 not null" },
 		{ "usage_thres", "double default NULL" },
-		{ "min_cpus_per_job", "int unsigned default 1" },
+		{ "min_cpus_per_job", "int unsigned default 1 not null" },
 		{ NULL, NULL}
 	};
 
@@ -1615,8 +1615,6 @@ extern int setup_association_limits(slurmdb_association_rec_t *assoc,
 		xstrcat(*cols, ", def_qos_id");
 		xstrcat(*vals, ", NULL");
 		xstrcat(*extra, ", def_qos_id=NULL");
-		/* 0 is the no def_qos_id, so it that way */
-		assoc->def_qos_id = 0;
 	} else if ((assoc->def_qos_id != NO_VAL)
 		   && ((int32_t)assoc->def_qos_id > 0)) {
 		xstrcat(*cols, ", def_qos_id");

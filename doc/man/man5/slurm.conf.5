@@ -1208,7 +1208,7 @@ The maximum job array size.
 The maximum job array task index value will be one less than MaxArraySize
 to allow for an index value of zero.
 Configure MaxArraySize to 0 in order to disable job array use.
-The value may not exceed 1000001.
+The value may not exceed 4000001.
 The value of \fBMaxJobCount\fR should be much larger than \fBMaxArraySize\fR.
 The default value is 1001.
 
@@ -2097,6 +2097,13 @@ to start.  This is similar to the MAXIJOB limit in Maui.
 The default value is 0, which means no limit.
 This option applies only to \fBSchedulerType=sched/backfill\fR.
 .TP
+\fBbf_min_age_reserve=#\fR
+The backfill scheduler will not reserve resources for pending jobs until they
+have been pending for at least the specified number of seconds.
+This can be valuable if jobs lack time limits or all time limits have the same
+value.
+The default value is zero, which will reserve resources for any pending job
+.TP
 \fBbf_resolution=#\fR
 The number of seconds in the resolution of data maintained about when jobs
 begin and end.
@@ -2172,6 +2179,11 @@ on such hardware, Slurm will consider each NUMA node within the socket as a
 separate socket by default. Use the Ignore_NUMA option to report the correct
 socket count, but \fBnot\fR optimize resource allocations on the NUMA nodes.
 .TP
+\fBkill_invalid_depend\fR
+If a job has an invalid dependency and it can never run terminate it
+and set its state to be JOB_CANCELLED. By default the job stays pending
+with reason DependencyNeverSatisfied.
+.TP
 \fBmax_depend_depth=#\fR
 Maximum number of jobs to test for a circular job dependency. Stop testing
 after this number of job dependencies have been tested. The default value is
@@ -2229,15 +2241,15 @@ It may be desirable to set this configuration parameter when there are multiple
 priorities of preemptable jobs.
 The logic to support this option is only available in the select/cons_res plugin.
 .TP
+\fBnohold_on_prolog_fail\fR
+By default if the Prolog exits with a non-zero value the job is requeued in
+held state. By specifying this parameter the job will be requeued but not
+held so that the scheduler can dispatch it to another host.
+.TP
 \fBsched_interval=#\fR
 How frequently, in seconds, the main scheduling loop will execute and test all
 pending jobs.
 The default value is 60 seconds.
-.TP
-\fBkill_invalid_depend\fR
-If a job has an invalid dependency and it can never run terminate it
-and set its state to be JOB_CANCELLED. By default the job stays pending
-with reason DependencyNeverSatisfied.
 .RE
 
 .TP
@@ -2917,6 +2929,10 @@ Overrides user options or automatic binding.
 \fBVerbose\fR
 Verbosely report binding before tasks run.
 Overrides user options.
+.TP
+\fBAutobind\fR
+Set a default binding in the event that "auto binding" doesn't find a match.
+Currently only supports threads. (E.g. TaskPluginParam=autobind=threads).
 .RE
 
 .TP
@@ -4097,6 +4113,10 @@ Available in \fBEpilogSlurmctld\fR only.
 \fBSLURM_JOB_GID\fR
 Group ID of the job's owner.
 Available in \fBPrologSlurmctld\fR and \fBEpilogSlurmctld\fR only.
+.TP
+\fBSLURM_JOB_GPUS\fR
+GPU IDs allocated to the job (if any).
+Available in the \fBProlog\fR only.
 .TP
 \fBSLURM_JOB_GROUP\fR
 Group name of the job's owner.

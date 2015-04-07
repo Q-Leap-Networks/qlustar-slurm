@@ -6,7 +6,7 @@ Uploaders: Roland Fehrenbacher <rf@q-leap.de>,
 Build-Depends: debhelper (>= 9), ql-deb-utils (>= 1.0), autotools-dev,
  dh-autoreconf, dh-exec, libncurses5-dev, libreadline-dev, po-debconf, python,
  libglade2-dev, libgtk2.0-dev, libmariadbclient-dev, libpam0g-dev, libperl-dev,
- chrpath, liblua5.2-dev|liblua5.1-0-dev, libnuma-dev, libhwloc-dev, libcr-dev,
+ chrpath, liblua5.2-dev, libnuma-dev, libhwloc-dev, libcr-dev,
  libhdf5-dev, libmunge-dev
 Standards-Version: 3.9.6
 Homepage: http://slurm.schedmd.com

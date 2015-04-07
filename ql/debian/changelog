@@ -1,3 +1,9 @@
+slurm-llnl (14.11.5-ql.1) stable; urgency=medium
+
+  * New upstream 14.11.5
+
+ -- Roland Fehrenbacher <rf@q-leap.de>  Tue, 07 Apr 2015 14:58:03 +0200
+
 slurm-llnl (14.11.4-ql.1) stable; urgency=medium
 
   * New upstream 14.11.4

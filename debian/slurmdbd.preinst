@@ -24,8 +24,10 @@ case "$1" in
           deluser --quiet slurm
           adduser --quiet --system --group --uid 64030 --no-create-home --home /nonexistent slurm
         fi
-        if [ "$SLURMHOME" != "/nonexistent" ] && [ ! -e $SLURMHOME ] ; then
-            usermod --home /nonexistent slurm
+        if [ "$SLURMHOME" != "/nonexistent" ] && [ ! -e $SLURMHOME ] && \
+           [ ! -e /var/run/slurm-llnl/slurmctld.pid ] && \
+           [ ! -e /var/run/slurm-llnl/slurmdbd.pid ] ; then
+            usermod --home /nonexistent slurm || true
         fi
       else
         adduser --quiet --system --group --uid 64030 --no-create-home --home /nonexistent slurm
@@ -60,8 +62,10 @@ case "$1" in
           deluser --quiet slurm
           adduser --quiet --system --group --uid 64030 --no-create-home --home /nonexistent slurm
         fi
-        if [ "$SLURMHOME" != "/nonexistent" ] && [ ! -e $SLURMHOME ] ; then
-            usermod --home /nonexistent slurm
+        if [ "$SLURMHOME" != "/nonexistent" ] && [ ! -e $SLURMHOME ] && \
+           [ ! -e /var/run/slurm-llnl/slurmctld.pid ] && \
+           [ ! -e /var/run/slurm-llnl/slurmdbd.pid ] ; then
+            usermod --home /nonexistent slurm || true
         fi
       else
         adduser --quiet --system --group --uid 64030 --no-create-home --home /nonexistent slurm

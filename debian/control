@@ -91,7 +91,7 @@ Description: SLURM PMI2 library implementation
 Package: libslurm-dev
 Section: libdevel
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libslurm28 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}, libslurm29 (= ${binary:Version})
 Description: SLURM development files
  SLURM, the Simple Linux Utility for Resource Management,
  is an open-source cluster resource management and job scheduling.
@@ -100,7 +100,7 @@ Description: SLURM development files
 Package: libslurmdb-dev
 Section: libdevel
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libslurmdb28 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}, libslurmdb29 (= ${binary:Version})
 Description: SLURM DataBase Daemon development files
  SLURM, the Simple Linux Utility for Resource Management,
  is an open-source cluster resource management and job scheduling.
@@ -110,7 +110,7 @@ Package: libpmi0-dev
 Section: libdevel
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, libpmi0 (= ${binary:Version}),
- libslurm28 (= ${binary:Version})
+ libslurm29 (= ${binary:Version})
 Description: SLURM PMI library implementation development files
  SLURM, the Simple Linux Utility for Resource Management,
  is an open-source cluster resource management and job scheduling.
@@ -121,7 +121,7 @@ Package: libpmi2-dev
 Section: libdevel
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, libpmi2 (= ${binary:Version}),
- libslurm28 (= ${binary:Version})
+ libslurm29 (= ${binary:Version})
 Description: SLURM PMI2library implementation development files
  SLURM, the Simple Linux Utility for Resource Management,
  is an open-source cluster resource management and job scheduling.

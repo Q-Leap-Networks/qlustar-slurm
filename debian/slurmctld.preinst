@@ -22,13 +22,17 @@ case "$1" in
         SLURMHOME=$(eval echo ~slurm)
         if [ "$SLURMUID" != "64030" ] || [ "$SLURMGID" != "64030" ] ; then
           deluser --quiet slurm
-          adduser --quiet --system --group --uid 64030 --no-create-home --home /nonexistent slurm
+          adduser --quiet --system --group --uid 64030 --no-create-home \
+                  --home /nonexistent slurm
         fi
-        if [ "$SLURMHOME" != "/nonexistent" ] && [ ! -e $SLURMHOME ] ; then
-            usermod --home /nonexistent slurm
+        if [ "$SLURMHOME" != "/nonexistent" ] && [ ! -e $SLURMHOME ] && \
+           [ ! -e /var/run/slurm-llnl/slurmctld.pid ] && \
+           [ ! -e /var/run/slurm-llnl/slurmdbd.pid ] ; then
+             usermod --home /nonexistent slurm
         fi
       else
-        adduser --quiet --system --group --uid 64030 --no-create-home --home /nonexistent slurm
+        adduser --quiet --system --group --uid 64030 --no-create-home \
+                --home /nonexistent slurm
       fi
 
       # Copying relevant changes from the old default file
@@ -47,13 +51,17 @@ case "$1" in
         SLURMHOME=$(eval echo ~slurm)
         if [ "$SLURMUID" != "64030" ] || [ "$SLURMGID" != "64030" ] ; then
           deluser --quiet slurm
-          adduser --quiet --system --group --uid 64030 --no-create-home --home /nonexistent slurm
+          adduser --quiet --system --group --uid 64030 --no-create-home \
+                  --home /nonexistent slurm
         fi
-        if [ "$SLURMHOME" != "/nonexistent" ] && [ ! -e $SLURMHOME ] ; then
+        if [ "$SLURMHOME" != "/nonexistent" ] && [ ! -e $SLURMHOME ] && \
+           [ ! -e /var/run/slurm-llnl/slurmctld.pid ] && \
+           [ ! -e /var/run/slurm-llnl/slurmdbd.pid ] ; then
             usermod --home /nonexistent slurm
         fi
       else
-        adduser --quiet --system --group --uid 64030 --no-create-home --home /nonexistent slurm
+        adduser --quiet --system --group --uid 64030 --no-create-home \
+                --home /nonexistent slurm
       fi
     ;;
 

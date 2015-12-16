@@ -4,11 +4,11 @@ Description: mail command absolute pathname
 Author: Gennaro Oliva <oliva.g@na.icar.cnr.it>                    
 Bug-Debian: http://bugs.debian.org/588862
 Forwarded: no
-Last-Update: 2014-09-05
+Last-Update: 2015-09-23
 
---- slurm-llnl-14.03.7.orig/doc/man/man1/strigger.1
-+++ slurm-llnl-14.03.7/doc/man/man1/strigger.1
-@@ -289,7 +289,7 @@ primary slurmctld fails.
+--- slurm-llnl-15.08.0.orig/doc/man/man1/strigger.1
++++ slurm-llnl-15.08.0/doc/man/man1/strigger.1
+@@ -298,7 +298,7 @@ primary slurmctld fails.
  strigger \-\-set \-\-primary_slurmctld_failure \\
           \-\-program=/usr/sbin/primary_slurmctld_failure
  # Notify the administrator of the failure using by e\-mail
@@ -17,7 +17,7 @@ Last-Update: 2014-09-05
  
  > strigger \-\-set \-\-primary_slurmctld_failure \\
             \-\-program=/usr/sbin/primary_slurmctld_failure
-@@ -308,7 +308,7 @@ argument to the script by SLURM).
+@@ -317,7 +317,7 @@ argument to the script by Slurm).
  strigger \-\-set \-\-node \-\-down \\
           \-\-program=/usr/sbin/slurm_admin_notify
  # Notify administrator using by e\-mail
@@ -26,9 +26,9 @@ Last-Update: 2014-09-05
  
  > strigger \-\-set \-\-node \-\-down \\
             \-\-program=/usr/sbin/slurm_admin_notify
---- slurm-llnl-14.03.7.orig/doc/man/man5/slurm.conf.5
-+++ slurm-llnl-14.03.7/doc/man/man5/slurm.conf.5
-@@ -1100,7 +1100,7 @@ not explicitly listed in the job submiss
+--- slurm-llnl-15.08.0.orig/doc/man/man5/slurm.conf.5
++++ slurm-llnl-15.08.0/doc/man/man5/slurm.conf.5
+@@ -1302,7 +1302,7 @@ including the microseconds, the daemon's
  .TP
  \fBMailProg\fR
  Fully qualified pathname to the program used to send email per user request.
@@ -37,9 +37,9 @@ Last-Update: 2014-09-05
  
  .TP
  \fBMaxArraySize\fR
---- slurm-llnl-14.03.7.orig/src/common/read_config.h
-+++ slurm-llnl-14.03.7/src/common/read_config.h
-@@ -111,7 +111,7 @@ extern char *default_plugstack;
+--- slurm-llnl-15.08.0.orig/src/common/read_config.h
++++ slurm-llnl-15.08.0/src/common/read_config.h
+@@ -115,7 +115,7 @@ extern char *default_plugstack;
  #  define DEFAULT_LAUNCH_TYPE         "launch/slurm"
  #endif
  
@@ -47,4 +47,4 @@ Last-Update: 2014-09-05
 +#define DEFAULT_MAIL_PROG           "/usr/bin/mail"
  #define DEFAULT_MAX_ARRAY_SIZE      1001
  #define DEFAULT_MAX_JOB_COUNT       10000
- #define DEFAULT_MAX_JOB_ID          0xffff0000
+ #define DEFAULT_MAX_JOB_ID          0x7fff0000

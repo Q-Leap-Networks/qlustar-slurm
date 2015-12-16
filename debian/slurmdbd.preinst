@@ -14,18 +14,21 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-
 case "$1" in
     install)
       if [ $(id -u slurm 2>/dev/null) ]; then
         SLURMUID=$(id -u slurm 2>/dev/null)
         SLURMGID=$(id -g slurm 2>/dev/null)
+        SLURMHOME=$(eval echo ~slurm)
         if [ "$SLURMUID" != "64030" ] || [ "$SLURMGID" != "64030" ] ; then
           deluser --quiet slurm
-          adduser --quiet --system --group --uid 64030 --no-create-home slurm
+          adduser --quiet --system --group --uid 64030 --no-create-home --home /nonexistent slurm
+        fi
+        if [ "$SLURMHOME" != "/nonexistent" ] && [ ! -e $SLURMHOME ] ; then
+            usermod --home /nonexistent slurm
         fi
       else
-        adduser --quiet --system --group --uid 64030 --no-create-home slurm
+        adduser --quiet --system --group --uid 64030 --no-create-home --home /nonexistent slurm
       fi
 
       # Copying relevant changes from the old default file
@@ -52,12 +55,16 @@ case "$1" in
       if [ $(id -u slurm 2>/dev/null) ]; then
         SLURMUID=$(id -u slurm 2>/dev/null)
         SLURMGID=$(id -g slurm 2>/dev/null)
+        SLURMHOME=$(eval echo ~slurm)
         if [ "$SLURMUID" != "64030" ] || [ "$SLURMGID" != "64030" ] ; then
           deluser --quiet slurm
-          adduser --quiet --system --group --uid 64030 --no-create-home slurm
+          adduser --quiet --system --group --uid 64030 --no-create-home --home /nonexistent slurm
+        fi
+        if [ "$SLURMHOME" != "/nonexistent" ] && [ ! -e $SLURMHOME ] ; then
+            usermod --home /nonexistent slurm
         fi
       else
-        adduser --quiet --system --group --uid 64030 --no-create-home slurm
+        adduser --quiet --system --group --uid 64030 --no-create-home --home /nonexistent slurm
       fi
     ;;
 
@@ -76,5 +83,3 @@ esac
 #DEBHELPER#
 
 exit 0
-
-

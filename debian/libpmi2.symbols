@@ -20,3 +20,4 @@ libpmi2.so.0 libpmi2 #MINVER#
  PMI2_Nameserv_lookup@Base 14.11.2
  PMI2_Nameserv_publish@Base 14.11.2
  PMI2_Nameserv_unpublish@Base 14.11.2
+ PMIX_Ring@Base 15.08.5

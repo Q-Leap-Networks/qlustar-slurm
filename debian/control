@@ -52,7 +52,7 @@ Description: SLURM central management daemon
  interconnect agnostic.
  This package contains the central management demon slurmctld.
 
-Package: libslurmdb28
+Package: libslurmdb29
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
@@ -61,7 +61,7 @@ Description: Runtime library files for the SLURM DataBase Daemon
  is an open-source cluster resource management and job scheduling.
  This package contains the SLURM DataBase Daemon runtime library.
 
-Package: libslurm28
+Package: libslurm29
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}

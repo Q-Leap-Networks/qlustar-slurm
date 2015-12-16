@@ -19,12 +19,16 @@ case "$1" in
       if [ $(id -u slurm 2>/dev/null) ]; then
         SLURMUID=$(id -u slurm 2>/dev/null)
         SLURMGID=$(id -g slurm 2>/dev/null)
+        SLURMHOME=$(eval echo ~slurm)
         if [ "$SLURMUID" != "64030" ] || [ "$SLURMGID" != "64030" ] ; then
           deluser --quiet slurm
-          adduser --quiet --system --group --uid 64030 --no-create-home slurm
+          adduser --quiet --system --group --uid 64030 --no-create-home --home /nonexistent slurm
+        fi
+        if [ "$SLURMHOME" != "/nonexistent" ] && [ ! -e $SLURMHOME ] ; then
+            usermod --home /nonexistent slurm
         fi
       else
-        adduser --quiet --system --group --uid 64030 --no-create-home slurm
+        adduser --quiet --system --group --uid 64030 --no-create-home --home /nonexistent slurm
       fi
 
       if [ -e /etc/default/slurm-llnl -a ! -e /etc/default/slurmd ] ; then
@@ -40,12 +44,16 @@ case "$1" in
       if [ $(id -u slurm 2>/dev/null) ]; then
         SLURMUID=$(id -u slurm 2>/dev/null)
         SLURMGID=$(id -g slurm 2>/dev/null)
+        SLURMHOME=$(eval echo ~slurm)
         if [ "$SLURMUID" != "64030" ] || [ "$SLURMGID" != "64030" ] ; then
           deluser --quiet slurm
-          adduser --quiet --system --group --uid 64030 --no-create-home slurm
+          adduser --quiet --system --group --uid 64030 --no-create-home --home /nonexistent slurm
+        fi
+        if [ "$SLURMHOME" != "/nonexistent" ] && [ ! -e $SLURMHOME ] ; then
+            usermod --home /nonexistent slurm
         fi
       else
-        adduser --quiet --system --group --uid 64030 --no-create-home slurm
+        adduser --quiet --system --group --uid 64030 --no-create-home --home /nonexistent slurm
       fi
     ;;
 

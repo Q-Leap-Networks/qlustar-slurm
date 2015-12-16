@@ -1,6 +1,8 @@
 usr/bin/pbsnodes
+usr/bin/qalter
 usr/bin/qdel
 usr/bin/qhold
+usr/bin/qrerun
 usr/bin/qrls
 usr/bin/qstat
 usr/bin/qsub

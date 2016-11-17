@@ -19,14 +19,18 @@ PAMDIR=/lib/$(DEB_HOST_MULTIARCH)/security
 export PERL_ARCHLIB := $(shell perl -MConfig -e \
   'print substr($$Config{vendorarch}, 1)')
 
+MARIADB_CONFIG = /usr/bin/mariadb_config
+
 %:
 	dh $@ --parallel --with autoreconf
 
 override_dh_auto_configure:
-	dh_auto_configure -- --libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) \
+	[ -x $(MARIADB_CONFIG) ] && \
+	  mysql_config="--with-mysql_config=$(MARIADB_CONFIG)"; \
+	  dh_auto_configure -- --libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) \
 	  --sysconfdir=/etc/qlustar/common/slurm-llnl \
 	  --localstatedir=/var/run/slurm-llnl --without-rpath \
-	  --with-munge --with-pam_dir=$(PAMDIR) --enable-pam
+	  --with-munge --with-pam_dir=$(PAMDIR) --enable-pam $$mysql_config
 
 override_dh_auto_install:
 	dh_auto_install

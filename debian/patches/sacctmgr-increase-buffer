@@ -26,6 +26,6 @@ Last-Update: 2014-09-15
  #define	MAX_INPUT_FIELDS 128
 -#define BUFFER_SIZE 4096
 +#define BUFFER_SIZE 524288
+ #define FORMAT_STRING_SIZE 34
  
  typedef enum {
- 	/* COMMON */

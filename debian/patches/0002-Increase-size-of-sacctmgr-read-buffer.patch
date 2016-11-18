@@ -1,0 +1,45 @@
+From: =?utf-8?q?R=C3=A9mi_Palancher?= <remi@rezib.org>
+Date: Mon, 15 Sep 2014 19:22:45 +0000
+Subject: Increase size of sacctmgr read buffer
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+This patch significantly increases the size of the buffer for reading dumps
+with sacctmgr load. Without this patch, sacctmgr is not able to handle lines
+with more than 4096 which is too small in some cases. Also removed useless
+macro definition in other related file.
+Author: Rémi Palancher <remi@rezib.org>
+Forwarded: http://thread.gmane.org/gmane.comp.distributed.slurm.devel/5483
+Last-Update: 2014-09-15
+---
+ src/sacctmgr/sacctmgr.c | 2 --
+ src/sacctmgr/sacctmgr.h | 2 +-
+ 2 files changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/src/sacctmgr/sacctmgr.c b/src/sacctmgr/sacctmgr.c
+index a8d2156..8201828 100644
+--- a/src/sacctmgr/sacctmgr.c
++++ b/src/sacctmgr/sacctmgr.c
+@@ -43,8 +43,6 @@
+ #include "src/common/xsignal.h"
+ #include "src/common/proc_args.h"
+ 
+-#define BUFFER_SIZE 4096
+-
+ char *command_name;
+ int exit_code;		/* sacctmgr's exit code, =1 on any error at any time */
+ int exit_flag;		/* program to terminate if =1 */
+diff --git a/src/sacctmgr/sacctmgr.h b/src/sacctmgr/sacctmgr.h
+index ab4e2c8..880ee6c 100644
+--- a/src/sacctmgr/sacctmgr.h
++++ b/src/sacctmgr/sacctmgr.h
+@@ -86,7 +86,7 @@
+ 
+ #define CKPT_WAIT	10
+ #define	MAX_INPUT_FIELDS 128
+-#define BUFFER_SIZE 4096
++#define BUFFER_SIZE 524288
+ #define FORMAT_STRING_SIZE 34
+ 
+ typedef enum {

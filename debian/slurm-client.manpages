@@ -27,4 +27,3 @@ debian/tmp/usr/share/man/man5/cgroup.conf.5
 debian/tmp/usr/share/man/man5/nonstop.conf.5
 debian/tmp/usr/share/man/man5/topology.conf.5
 debian/tmp/usr/share/man/man5/slurm.conf.5
-debian/tmp/usr/share/man/man5/wiki.conf.5

@@ -1,3 +1,9 @@
+slurm-llnl (16.05.8-ql.2) stable; urgency=medium
+
+  * Allow multiple slurmd per node
+
+ -- Roland Fehrenbacher <rf@q-leap.de>  Tue, 25 Apr 2017 15:58:28 +0000
+
 slurm-llnl (16.05.8-ql.1) stable; urgency=medium
 
   * New upstream 16.05.8

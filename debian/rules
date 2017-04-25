@@ -29,7 +29,8 @@ override_dh_auto_configure:
 	dh_auto_configure -- --libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) \
 	  --sysconfdir=/etc/qlustar/common/slurm-llnl \
 	  --localstatedir=/var/run/slurm-llnl --without-rpath \
-	  --with-munge --with-pam_dir=$(PAMDIR) --enable-pam
+	  --with-munge --with-pam_dir=$(PAMDIR) --enable-pam \
+	  --with-multiple-slurmd
 
 override_dh_auto_install:
 	dh_auto_install

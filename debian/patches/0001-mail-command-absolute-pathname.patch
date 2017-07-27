@@ -15,10 +15,10 @@ Last-Update: 2015-09-23
  3 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/doc/man/man1/strigger.1 b/doc/man/man1/strigger.1
-index c551be0..9ae1c20 100644
+index 63f628a..dfac33b 100644
 --- a/doc/man/man1/strigger.1
 +++ b/doc/man/man1/strigger.1
-@@ -298,7 +298,7 @@ primary slurmctld fails.
+@@ -304,7 +304,7 @@ primary slurmctld fails.
  strigger \-\-set \-\-primary_slurmctld_failure \\
           \-\-program=/usr/sbin/primary_slurmctld_failure
  # Notify the administrator of the failure using by e\-mail
@@ -27,7 +27,7 @@ index c551be0..9ae1c20 100644
  
  > strigger \-\-set \-\-primary_slurmctld_failure \\
             \-\-program=/usr/sbin/primary_slurmctld_failure
-@@ -317,7 +317,7 @@ argument to the script by Slurm).
+@@ -323,7 +323,7 @@ argument to the script by Slurm).
  strigger \-\-set \-\-node \-\-down \\
           \-\-program=/usr/sbin/slurm_admin_notify
  # Notify administrator using by e\-mail
@@ -37,10 +37,10 @@ index c551be0..9ae1c20 100644
  > strigger \-\-set \-\-node \-\-down \\
             \-\-program=/usr/sbin/slurm_admin_notify
 diff --git a/doc/man/man5/slurm.conf.5 b/doc/man/man5/slurm.conf.5
-index b28cc0c..b5d1448 100644
+index 1c78782..a352df0 100644
 --- a/doc/man/man5/slurm.conf.5
 +++ b/doc/man/man5/slurm.conf.5
-@@ -1315,7 +1315,7 @@ and ID.
+@@ -1330,7 +1330,7 @@ local address itself.
  .TP
  \fBMailProg\fR
  Fully qualified pathname to the program used to send email per user request.
@@ -50,10 +50,10 @@ index b28cc0c..b5d1448 100644
  .TP
  \fBMaxArraySize\fR
 diff --git a/src/common/read_config.h b/src/common/read_config.h
-index 7609e4e..7b2c830 100644
+index b8fb823..5db2c2e 100644
 --- a/src/common/read_config.h
 +++ b/src/common/read_config.h
-@@ -115,7 +115,7 @@ extern char *default_plugstack;
+@@ -117,7 +117,7 @@ extern char *default_plugstack;
  #  define DEFAULT_LAUNCH_TYPE         "launch/slurm"
  #endif
  
@@ -61,4 +61,4 @@ index 7609e4e..7b2c830 100644
 +#define DEFAULT_MAIL_PROG           "/usr/bin/mail"
  #define DEFAULT_MAX_ARRAY_SIZE      1001
  #define DEFAULT_MAX_JOB_COUNT       10000
- #define DEFAULT_MAX_JOB_ID          0x7fff0000
+ #define DEFAULT_MAX_JOB_ID          0x03ff0000

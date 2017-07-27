@@ -1,3 +1,10 @@
+slurm-llnl (17.02.6-ql.1) stable; urgency=medium
+
+  * New upstream 17.02.6
+  * Merge upstream d/dir changes
+
+ -- Roland Fehrenbacher <rf@q-leap.de>  Thu, 27 Jul 2017 21:27:57 +0200
+
 slurm-llnl (16.05.8-ql.2) stable; urgency=medium
 
   * Allow multiple slurmd per node

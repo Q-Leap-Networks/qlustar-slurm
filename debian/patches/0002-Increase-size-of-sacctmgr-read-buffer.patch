@@ -18,10 +18,10 @@ Last-Update: 2014-09-15
  2 files changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/src/sacctmgr/sacctmgr.c b/src/sacctmgr/sacctmgr.c
-index a8d2156..8201828 100644
+index 24eaa40..c9bf733 100644
 --- a/src/sacctmgr/sacctmgr.c
 +++ b/src/sacctmgr/sacctmgr.c
-@@ -43,8 +43,6 @@
+@@ -45,8 +45,6 @@
  #include "src/common/xsignal.h"
  #include "src/common/proc_args.h"
  
@@ -31,10 +31,10 @@ index a8d2156..8201828 100644
  int exit_code;		/* sacctmgr's exit code, =1 on any error at any time */
  int exit_flag;		/* program to terminate if =1 */
 diff --git a/src/sacctmgr/sacctmgr.h b/src/sacctmgr/sacctmgr.h
-index ab4e2c8..880ee6c 100644
+index 2232c38..6b8832e 100644
 --- a/src/sacctmgr/sacctmgr.h
 +++ b/src/sacctmgr/sacctmgr.h
-@@ -86,7 +86,7 @@
+@@ -67,7 +67,7 @@
  
  #define CKPT_WAIT	10
  #define	MAX_INPUT_FIELDS 128

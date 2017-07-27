@@ -1,15 +1,15 @@
 [Unit]
-Description=Slurm controller daemon
+Description=Slurm DBD accounting daemon
 After=network.target munge.service
 ConditionPathExists=/etc/qlustar/common/slurm-llnl/slurm.conf
-Documentation=man:slurmctld(8)
+Documentation=man:slurmdbd(8)
 
 [Service]
 Type=forking
-EnvironmentFile=-/etc/default/slurmctld
-ExecStart=/usr/sbin/slurmctld $SLURMCTLD_OPTIONS
+EnvironmentFile=-/etc/default/slurmdbd
+ExecStart=/usr/sbin/slurmdbd $SLURMDBD_OPTIONS
 ExecReload=/bin/kill -HUP $MAINPID
-PIDFile=/var/run/slurm-llnl/slurmctld.pid
+PIDFile=/var/run/slurm-llnl/slurmdbd.pid
 
 [Install]
 WantedBy=multi-user.target

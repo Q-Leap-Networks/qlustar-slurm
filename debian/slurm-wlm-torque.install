@@ -1,3 +1,4 @@
+usr/bin/generate_pbs_nodefile
 usr/bin/pbsnodes
 usr/bin/qalter
 usr/bin/qdel
@@ -6,4 +7,3 @@ usr/bin/qrerun
 usr/bin/qrls
 usr/bin/qstat
 usr/bin/qsub
-usr/bin/generate_pbs_nodefile

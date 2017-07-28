@@ -1,2 +1,2 @@
-usr/sbin/slurmdbd
 usr/bin/sacctmgr
+usr/sbin/slurmdbd

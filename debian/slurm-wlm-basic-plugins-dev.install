@@ -1,2 +1,2 @@
-usr/lib/*/slurm/*.la
 usr/lib/*/slurm/*.a
+usr/lib/*/slurm/*.la

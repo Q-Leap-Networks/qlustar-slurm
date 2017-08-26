@@ -37,10 +37,10 @@ index 63f628a..dfac33b 100644
  > strigger \-\-set \-\-node \-\-down \\
             \-\-program=/usr/sbin/slurm_admin_notify
 diff --git a/doc/man/man5/slurm.conf.5 b/doc/man/man5/slurm.conf.5
-index 1c78782..a352df0 100644
+index 948cac7..1e5e2c5 100644
 --- a/doc/man/man5/slurm.conf.5
 +++ b/doc/man/man5/slurm.conf.5
-@@ -1330,7 +1330,7 @@ local address itself.
+@@ -1332,7 +1332,7 @@ local address itself.
  .TP
  \fBMailProg\fR
  Fully qualified pathname to the program used to send email per user request.

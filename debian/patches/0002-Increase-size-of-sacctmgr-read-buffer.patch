@@ -18,7 +18,7 @@ Last-Update: 2014-09-15
  2 files changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/src/sacctmgr/sacctmgr.c b/src/sacctmgr/sacctmgr.c
-index 24eaa40..c9bf733 100644
+index fd009c9..79b672f 100644
 --- a/src/sacctmgr/sacctmgr.c
 +++ b/src/sacctmgr/sacctmgr.c
 @@ -45,8 +45,6 @@

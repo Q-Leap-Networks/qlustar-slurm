@@ -1,3 +1,10 @@
+slurm-llnl (17.02.10-ql.1) stable; urgency=medium
+
+  * New upstream 17.02.10
+  * Fixes CVE-2018-7033
+
+ -- Roland Fehrenbacher <rf@q-leap.de>  Fri, 27 Apr 2018 17:14:27 +0000
+
 slurm-llnl (17.02.7-ql.1) stable; urgency=medium
 
   * New upstream 17.02.7

@@ -972,6 +972,8 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_unpackmem_ptr@Base 1.3.8
  slurm_unpackmem_xmalloc@Base 1.3.8
  slurm_unpackstr_array@Base 1.3.8
+ slurm_unpackstr_xmalloc_chooser@Base 17.02.10
+ slurm_unpackstr_xmalloc_escaped@Base 17.02.10
  slurm_unsetenvp@Base 1.3.8
  slurm_update_block@Base 2.1.0
  slurm_update_front_end@Base 2.3.1
@@ -1018,7 +1020,9 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_xstrfmtcat@Base 1.3.8
  slurm_xstrftimecat@Base 1.3.8
  slurm_xstring_is_whitespace@Base 1.3.8
+ slurm_xstrncasecmp@Base 17.02.10
  slurm_xstrncat@Base 2.2.0
+ slurm_xstrncmp@Base 17.02.10
  slurm_xstrndup@Base 1.3.8
  slurm_xstrstrip@Base 1.3.9
  slurm_xstrsubstitute@Base 1.3.8

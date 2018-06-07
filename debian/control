@@ -28,7 +28,7 @@ Build-Depends: autotools-dev,
                po-debconf,
                python,
                ql-deb-utils,
-Standards-Version: 3.9.8
+Standards-Version: 4.1.4
 Homepage: http://slurm.schedmd.com
 
 Package: slurm-client
@@ -114,7 +114,7 @@ Description: debugging symbols for SLURM central management daemon
  This package contains the debugging symbols for central management
  daemon slurmctld.
 
-Package: libslurmdb31
+Package: libslurmdb32
 Section: libs
 Architecture: any
 Pre-Depends: ${misc:Pre-Depends},
@@ -125,10 +125,10 @@ Description: Runtime library files for the SLURM DataBase Daemon
  is an open-source cluster resource management and job scheduling.
  This package contains the SLURM DataBase Daemon runtime library.
 
-Package: libslurmdb31-dbg
+Package: libslurmdb32-dbg
 Architecture: any
 Section: debug
-Depends: libslurmdb31 (= ${binary:Version}),
+Depends: libslurmdb32 (= ${binary:Version}),
          ${misc:Depends},
 Description: debugging symbols for SLURM slurmdbd runtime library
  SLURM stands for Simple Linux Utility for Resource Management, it
@@ -138,7 +138,7 @@ Description: debugging symbols for SLURM slurmdbd runtime library
  This package contains the debugging symbols for slurmdbd runtime
  library.
 
-Package: libslurm31
+Package: libslurm32
 Section: libs
 Architecture: any
 Pre-Depends: ${misc:Pre-Depends},
@@ -149,10 +149,10 @@ Description: Runtime library files for SLURM
  is an open-source cluster resource management and job scheduling.
  This package contains the SLURM runtime library.
 
-Package: libslurm31-dbg
+Package: libslurm32-dbg
 Architecture: any
 Section: debug
-Depends: libslurm31 (= ${binary:Version}),
+Depends: libslurm32 (= ${binary:Version}),
          ${misc:Depends},
 Description: debugging symbols for SLURM slurm runtime library
  SLURM stands for Simple Linux Utility for Resource Management, it
@@ -216,7 +216,7 @@ Description: debugging symbols for SLURM PMI2 library implementation
 Package: libslurm-dev
 Section: libdevel
 Architecture: any
-Depends: libslurm31 (= ${binary:Version}),
+Depends: libslurm32 (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends},
 Description: SLURM development files
@@ -227,7 +227,7 @@ Description: SLURM development files
 Package: libslurmdb-dev
 Section: libdevel
 Architecture: any
-Depends: libslurmdb31 (= ${binary:Version}),
+Depends: libslurmdb32 (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends},
 Description: SLURM DataBase Daemon development files
@@ -239,7 +239,7 @@ Package: libpmi0-dev
 Section: libdevel
 Architecture: any
 Depends: libpmi0 (= ${binary:Version}),
-         libslurm31 (= ${binary:Version}),
+         libslurm32 (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends},
 Description: SLURM PMI library implementation development files
@@ -252,7 +252,7 @@ Package: libpmi2-0-dev
 Section: libdevel
 Architecture: any
 Depends: libpmi2-0 (= ${binary:Version}),
-         libslurm31 (= ${binary:Version}),
+         libslurm32 (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends},
 Conflicts: libpmi2-dev,

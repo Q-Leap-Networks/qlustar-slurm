@@ -1,4 +1,4 @@
-libslurm.so.31 libslurm31 #MINVER#
+libslurm.so.32 libslurm32 #MINVER#
  islurm_get_rem_time2__@Base 1.3.8
  islurm_get_rem_time__@Base 1.3.8
  plugin_context_create@Base 2.5.7
@@ -14,10 +14,11 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_addto_step_list@Base 15.08.0
  slurm_addto_mode_char_list@Base 17.02.0
  slurm_addto_char_list@Base 1.3.8
+ slurm_allocate_pack_job_blocking@Base 17.11.2
  slurm_allocate_resources@Base 1.3.8
  slurm_allocate_resources_blocking@Base 1.3.8
  slurm_allocation_lookup@Base 1.3.8
- slurm_allocation_lookup_lite@Base 1.3.8
+#MISSING: 17.11.2# slurm_allocation_lookup_lite@Base 1.3.8
  slurm_allocation_msg_thr_create@Base 1.3.8
  slurm_allocation_msg_thr_destroy@Base 1.3.8
  slurm_api_clear_config@Base 1.3.8
@@ -28,8 +29,8 @@ libslurm.so.31 libslurm31 #MINVER#
 #MISSING: 17.02.0# slurm_arg_idx_by_name@Base 1.3.8
 #MISSING: 17.02.0# slurm_arg_name_by_idx@Base 1.3.8
 #MISSING: 2.5.3# slurm_auth_context_create@Base 1.3.8
- slurm_asctime@Base 15.08.0
- slurm_asctime_r@Base 15.08.0
+#MISSING: 17.11.2# slurm_asctime@Base 15.08.0
+#MISSING: 17.11.2# slurm_asctime_r@Base 15.08.0
  slurm_auth_fini@Base 1.3.8
 #MISSING: 2.6.5# slurm_auth_get_arg_desc@Base 1.3.8
  slurm_auth_init@Base 1.3.8
@@ -82,6 +83,8 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_bitfmt2int@Base 1.3.8
  slurm_callerid_get_own_netinfo@Base 15.08.0
  slurm_cgroup_conf@Base 2.3.1
+ slurm_char_list_copy@Base 17.11.2
+ slurm_char_list_to_xstr@Base 17.11.2
  slurm_checkpoint_able@Base 1.3.8
  slurm_checkpoint_complete@Base 1.3.8
  slurm_checkpoint_create@Base 1.3.8
@@ -94,7 +97,7 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_checkpoint_tasks@Base 2.0.0
  slurm_checkpoint_vacate@Base 1.3.8
  slurm_clear_trigger@Base 1.3.8
- slurm_close@Base 15.08.0
+#MISSING: 17.11.2# slurm_close@Base 15.08.0
 #MISSING: 15.08.0# slurm_close_accepted_conn@Base 1.3.8
  slurm_close_slurmdbd_conn@Base 1.3.8
 #MISSING: 15.08.0# slurm_close_stream@Base 1.3.8
@@ -178,12 +181,14 @@ libslurm.so.31 libslurm31 #MINVER#
 #MISSING: 15.08.0# slurm_destroy_association_shares_object@Base 2.0.0
  slurm_destroy_char@Base 1.3.8
  slurm_destroy_config_key_pair@Base 2.1.0
+ slurm_destroy_federation_rec@Base 17.11.2
+ slurm_destroy_gres_device@Base 17.11.2
  slurm_destroy_priority_factors_object@Base 2.0.0
  slurm_destroy_select_ba_request@Base 2.3.1
  slurm_destroy_uint32_ptr@Base 2.0.0
 #MISSING: 2.6.2# slurm_diff_tv@Base 2.3.1
  slurm_diff_tv_str@Base 2.3.1
- slurm_dump_cleanup_list@Base 1.3.8
+#MISSING: 17.11.2# slurm_dump_cleanup_list@Base 1.3.8
  slurm_eio_handle_create@Base 14.11.0
  slurm_eio_handle_destroy@Base 14.11.0
  slurm_eio_handle_mainloop@Base 14.11.0
@@ -204,18 +209,21 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_env_array_merge@Base 1.3.8
  slurm_env_array_overwrite@Base 1.3.8
  slurm_env_array_overwrite_fmt@Base 1.3.8
+ slurm_env_array_overwrite_pack_fmt@Base 17.11.2
  slurm_env_unset_environment@Base 2.3.3
  slurm_error@Base 1.3.8
  slurm_fatal@Base 1.3.8
- slurm_fatal_add_cleanup@Base 1.3.8
- slurm_fatal_add_cleanup_job@Base 1.3.8
- slurm_fatal_cleanup@Base 1.3.8
- slurm_fatal_remove_cleanup@Base 1.3.8
- slurm_fatal_remove_cleanup_job@Base 1.3.8
+ slurm_fatal_abort@Base 17.11.4
+#MISSING: 17.11.2# slurm_fatal_add_cleanup@Base 1.3.8
+#MISSING: 17.11.2# slurm_fatal_add_cleanup_job@Base 1.3.8
+#MISSING: 17.11.2# slurm_fatal_cleanup@Base 1.3.8
+#MISSING: 17.11.2# slurm_fatal_remove_cleanup@Base 1.3.8
+#MISSING: 17.11.2# slurm_fatal_remove_cleanup_job@Base 1.3.8
  slurm_fd_read_n@Base 1.3.8
  slurm_fd_set_blocking@Base 1.3.8
  slurm_fd_set_nonblocking@Base 1.3.8
  slurm_fd_write_n@Base 1.3.8
+ slurm_find_char_in_list@Base 17.11.2
  slurm_find_group_user@Base 14.11.8
  slurm_forward_data@Base 2.4.5
  slurm_free_accounting_update_msg@Base 1.3.8
@@ -224,6 +232,7 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_free_assoc_mgr_info_msg@Base 15.08.0
  slurm_free_assoc_mgr_info_request_members@Base 15.08.8
  slurm_free_assoc_mgr_info_request_msg@Base 15.08.0
+ slurm_free_batch_script_msg@Base 17.11.2
  slurm_free_block_info@Base 2.2.0
  slurm_free_block_info_members@Base 2.2.0
  slurm_free_block_info_msg@Base 2.1.0
@@ -242,6 +251,7 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_free_complete_prolog_msg@Base 14.03.0
  slurm_free_composite_msg@Base 15.08.0
  slurm_free_ctl_conf@Base 1.3.8
+ slurm_free_ctld_multi_msg@Base 17.11.2
  slurm_free_delete_part_msg@Base 1.3.8
  slurm_free_epilog_complete_msg@Base 1.3.8
  slurm_free_event_log_msg@Base 17.02.0
@@ -252,7 +262,7 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_free_front_end_info_request_msg@Base 2.3.1
  slurm_free_get_kvs_msg@Base 1.3.8
  slurm_free_job_alloc_info_msg@Base 1.3.8
- slurm_free_job_alloc_info_response_msg@Base 1.3.8
+#MISSING: 17.11.2# slurm_free_job_alloc_info_response_msg@Base 1.3.8
  slurm_free_job_array_resp@Base 14.11.0
  slurm_free_job_desc_msg@Base 1.3.8
  slurm_free_job_id_msg@Base 1.3.8
@@ -275,7 +285,7 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_free_job_step_stat@Base 2.2.0
  slurm_free_job_user_id_msg@Base 2.6.2
  slurm_free_kill_job_msg@Base 1.3.8
- slurm_free_kill_tasks_msg@Base 1.3.8
+#MISSING: 17.11.2# slurm_free_kill_tasks_msg@Base 1.3.8
  slurm_free_kvs_comm_set@Base 1.3.8
  slurm_free_last_update_msg@Base 1.3.8
  slurm_free_launch_tasks_request_msg@Base 1.3.8
@@ -306,6 +316,7 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_free_reattach_tasks_response_msg@Base 1.3.8
  slurm_free_reboot_msg@Base 2.4.5
  slurm_free_requeue_msg@Base 14.03.0
+ slurm_free_reroute_msg@Base 17.11.2
  slurm_free_reservation_info_msg@Base 2.0.0
  slurm_free_reserve_info_members@Base 2.2.0
  slurm_free_resource_allocation_response_msg@Base 1.3.8
@@ -317,12 +328,14 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_free_sbcast_cred_msg@Base 2.1.0
  slurm_free_set_debug_flags_msg@Base 2.3.1
  slurm_free_set_debug_level_msg@Base 1.3.8
+ slurm_free_set_fs_dampening_factor_msg@Base 17.11.2
  slurm_free_shares_request_msg@Base 2.0.0
  slurm_free_shares_response_msg@Base 2.0.0
  slurm_free_shutdown_msg@Base 1.3.8
  slurm_free_sib_msg@Base 17.02.0
 #MISSING: 16.05.0# slurm_free_sicp_msg@Base 15.08.0
- slurm_free_signal_job_msg@Base 1.3.8
+#MISSING: 17.11.2# slurm_free_signal_job_msg@Base 1.3.8
+ slurm_free_signal_tasks_msg@Base 17.11.2
  slurm_free_slurmd_status@Base 1.3.8
  slurm_free_spank_env_request_msg@Base 2.3.1
  slurm_free_spank_env_responce_msg@Base 2.3.1
@@ -363,7 +376,8 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_get_accounting_storage_user@Base 1.3.8
  slurm_get_acct_gather_energy_type@Base 2.5.3
  slurm_get_acct_gather_filesystem_type@Base 2.6.2
- slurm_get_acct_gather_infiniband_type@Base 2.6.2
+#MISSING: 17.11.2# slurm_get_acct_gather_infiniband_type@Base 2.6.2
+ slurm_get_acct_gather_interconnect_type@Base 17.11.2
  slurm_get_acct_gather_node_freq@Base 2.5.3
  slurm_get_acct_gather_profile_type@Base 2.6.2
  slurm_get_addr@Base 1.3.8
@@ -476,7 +490,7 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_get_slurm_user_id@Base 1.3.8
  slurm_get_slurmctld_plugstack@Base 2.6.2
  slurm_get_slurmctld_timeout@Base 17.02.0
- slurm_get_slurmd_plugstack@Base 14.03.0
+#MISSING: 17.11.2# slurm_get_slurmd_plugstack@Base 14.03.0
  slurm_get_slurmd_port@Base 1.3.8
  slurm_get_slurmd_spooldir@Base 14.11.0
  slurm_get_slurmd_user_id@Base 2.0.0
@@ -508,10 +522,23 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_get_vsize_factor@Base 2.2.0
  slurm_get_wait_time@Base 1.3.8
  slurm_getenvp@Base 1.3.8
- slurm_getpeername@Base 15.08.0
+#MISSING: 17.11.2# slurm_getpeername@Base 15.08.0
  slurm_getpwuid_r@Base 14.03.0
  slurm_gmtime@Base 15.08.0
  slurm_gmtime_r@Base 15.08.0
+ slurm_gres_2_tres_str@Base 17.11.2
+ slurm_gres_build_job_details@Base 17.11.2
+ slurm_gres_device_major@Base 17.11.2
+ slurm_gres_get_job_info@Base 17.11.2
+ slurm_gres_get_job_state@Base 17.11.2
+ slurm_gres_get_node_used@Base 17.11.2
+ slurm_gres_get_step_info@Base 17.11.2
+ slurm_gres_get_step_state@Base 17.11.2
+ slurm_gres_get_system_cnt@Base 17.11.2
+ slurm_gres_get_value_by_type@Base 17.11.2
+ slurm_gres_gresid_to_gresname@Base 17.11.2
+ slurm_gres_set_job_tres_cnt@Base 17.11.2
+ slurm_gres_set_node_tres_cnt@Base 17.11.2
  slurm_grow_buf@Base 1.3.8
  slurm_hostlist_copy@Base 1.3.8
  slurm_hostlist_count@Base 1.3.8
@@ -577,6 +604,7 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_init_update_node_msg@Base 2.0.0
  slurm_init_update_step_msg@Base 2.2.0
 #MISSING: 14.03.0# slurm_int_and_set_count@Base 1.3.8
+ slurm_job_batch_script@Base 17.11.2
  slurm_job_cpus_allocated_on_node@Base 2.1.0
  slurm_job_cpus_allocated_on_node_id@Base 2.1.0
  slurm_job_cpus_allocated_str_on_node@Base 15.08.0
@@ -611,6 +639,7 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_jobinfo_ctx_get@Base 1.3.8
  slurm_kill_job2@Base 14.11.0
  slurm_kill_job@Base 1.3.8
+ slurm_kill_job_msg@Base 17.11.2
  slurm_kill_job_step@Base 1.3.8
 #MISSING: 15.08.0# slurm_layouts_fini@Base 14.11.0
 #MISSING: 15.08.0# slurm_layouts_get_entity@Base 14.11.0
@@ -652,12 +681,16 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_load_federation@Base 17.02.0
  slurm_load_front_end@Base 2.3.1
  slurm_load_job@Base 1.3.8
+ slurm_load_job_prio@Base 17.11.2
  slurm_load_job_user@Base 2.6.2
  slurm_load_jobs@Base 1.3.8
  slurm_load_layout@Base 15.08.0
  slurm_load_licenses@Base 14.03.0
+ slurm_load_node2@Base 17.11.2
  slurm_load_node@Base 1.3.8
+ slurm_load_node_single2@Base 17.11.2
  slurm_load_node_single@Base 2.6.2
+ slurm_load_partitions2@Base 17.11.2
  slurm_load_partitions@Base 1.3.8
  slurm_load_powercap@Base 15.08.0
  slurm_load_reservations@Base 2.0.0
@@ -695,7 +728,7 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_msg_sendto_timeout@Base 15.08.0
  slurm_msg_t_copy@Base 1.3.8
  slurm_msg_t_init@Base 1.3.8
- slurm_net_accept_stream@Base 1.3.8
+#MISSING: 17.11.2# slurm_net_accept_stream@Base 1.3.8
  slurm_net_set_low_water@Base 1.3.8
  slurm_net_stream_listen@Base 1.3.8
  slurm_network_callerid@Base 15.08.0
@@ -715,6 +748,8 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_pack64@Base 1.3.8
  slurm_pack8@Base 1.3.8
  slurm_pack_block_job_info@Base 2.3.1
+ slurm_pack_job_lookup@Base 17.11.2
+ slurm_pack_job_will_run@Base 17.11.2
  slurm_pack_slurm_addr@Base 1.3.8
  slurm_pack_slurm_addr_array@Base 1.3.8
  slurm_pack_slurm_step_layout@Base 14.03.0
@@ -785,6 +820,7 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_print_layout_info@Base 15.08.0
 #MISSING: 15.08.0# slurm_print_mem_bind_help@Base 2.0.0
  slurm_print_mem_bind_help@Base 2.0.0
+ slurm_print_multi_line_string@Base 17.11.4
  slurm_print_node_info_msg@Base 1.3.8
  slurm_print_node_table@Base 1.3.8
  slurm_print_partition_info@Base 1.3.8
@@ -857,6 +893,7 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_send_recv_node_msg@Base 1.3.8
  slurm_send_recv_rc_msg_only_one@Base 1.3.8
  slurm_send_recv_slurmdbd_msg@Base 1.3.8
+ slurm_send_reroute_msg@Base 17.11.2
  slurm_send_slurmdbd_msg@Base 1.3.8
  slurm_send_slurmdbd_recv_rc_msg@Base 1.3.8
  slurm_send_timeout@Base 15.08.0
@@ -874,16 +911,20 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_set_debug_flags@Base 2.3.1
  slurm_set_debug_level@Base 1.3.8
  slurm_set_debugflags@Base 2.3.1
+ slurm_set_fs_dampening_factor@Base 17.11.2
+ slurm_set_fs_dampeningfactor@Base 17.11.2
  slurm_set_jobcomp_port@Base 1.3.11
  slurm_set_launch_type@Base 2.5.3
  slurm_set_power_parameters@Base 15.08.0
  slurm_set_schedlog_level@Base 2.2.0
 #MISSING: 15.08.0# slurm_set_stream_blocking@Base 1.3.8
 #MISSING: 15.08.0# slurm_set_stream_non_blocking@Base 1.3.8
+ slurm_set_select_type_param@Base 17.11.2
  slurm_set_tree_width@Base 1.3.8
  slurm_set_trigger@Base 1.3.8
  slurm_setenvpf@Base 1.3.8
  slurm_seterrno@Base 1.3.8
+ slurm_setup_remote_working_cluster@Base 17.11.2
  slurm_setup_sockaddr@Base 15.08.0
  slurm_shutdown@Base 1.3.8
  slurm_shutdown_msg_conn@Base 1.3.8
@@ -927,14 +968,17 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_step_layout_host_id@Base 1.3.8
  slurm_step_layout_host_name@Base 1.3.8
  slurm_step_layout_type_name@Base 2.0.0
+ slurm_step_retry_errno@Base 17.11.4
  slurm_stepd_add_extern_pid@Base 15.08.4
  slurm_stepd_available@Base 15.08.0
  slurm_stepd_connect@Base 15.08.0
  slurm_stepd_get_uid@Base 15.08.0
 #MISSING: 17.02.0# slurm_strcasestr@Base 2.0.0
+ slurm_stepd_get_x11_display@Base 17.11.2
  slurm_strerror@Base 1.3.8
  slurm_strlcpy@Base 1.3.8
  slurm_submit_batch_job@Base 1.3.8
+ slurm_submit_batch_pack_job@Base 17.11.2
  slurm_suspend2@Base 14.11.0
  slurm_suspend@Base 1.3.8
  slurm_takeover@Base 2.0.0
@@ -972,8 +1016,8 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_unpackmem_ptr@Base 1.3.8
  slurm_unpackmem_xmalloc@Base 1.3.8
  slurm_unpackstr_array@Base 1.3.8
- slurm_unpackstr_xmalloc_chooser@Base 17.02.10
- slurm_unpackstr_xmalloc_escaped@Base 17.02.10
+ slurm_unpackstr_xmalloc_chooser@Base 17.11.5
+ slurm_unpackstr_xmalloc_escaped@Base 17.11.5
  slurm_unsetenvp@Base 1.3.8
  slurm_update_block@Base 2.1.0
  slurm_update_front_end@Base 2.3.1
@@ -1020,10 +1064,11 @@ libslurm.so.31 libslurm31 #MINVER#
  slurm_xstrfmtcat@Base 1.3.8
  slurm_xstrftimecat@Base 1.3.8
  slurm_xstring_is_whitespace@Base 1.3.8
- slurm_xstrncasecmp@Base 17.02.10
+ slurm_xstrncasecmp@Base 17.02.9
  slurm_xstrncat@Base 2.2.0
- slurm_xstrncmp@Base 17.02.10
+ slurm_xstrncmp@Base 17.02.9
  slurm_xstrndup@Base 1.3.8
+ slurm_xstrrchr@Base 17.11.2
  slurm_xstrstrip@Base 1.3.9
  slurm_xstrsubstitute@Base 1.3.8
  slurm_xstrtolower@Base 2.1.10
@@ -1103,6 +1148,7 @@ libslurm.so.31 libslurm31 #MINVER#
  slurmdb_find_assoc_in_list@Base 16.05.0
  slurmdb_find_cluster_accting_tres_in_list@Base 15.08.0
  slurmdb_find_cluster_in_list@Base 17.02.0
+ slurmdb_find_qos_in_list@Base 17.11.5
  slurmdb_find_qos_in_list_by_name@Base 15.08.0
  slurmdb_find_selected_step_in_list@Base 15.08.1
  slurmdb_find_tres_count_in_string@Base 15.08.0
@@ -1117,6 +1163,7 @@ libslurm.so.31 libslurm31 #MINVER#
  slurmdb_get_acct_hierarchical_rec_list@Base 2.3.1
  slurmdb_get_acct_hierarchical_rec_list_no_lft@Base 16.05.0
  slurmdb_get_first_avail_cluster@Base 15.08.0
+ slurmdb_get_first_pack_cluster@Base 17.11.2
  slurmdb_get_hierarchical_sorted_assoc_list@Base 2.3.1
  slurmdb_get_info_cluster@Base 2.3.1
 #MISSING: 15.08.10# slurmdb_get_new_tres_pos@Base 15.08.0
@@ -1197,6 +1244,7 @@ libslurm.so.31 libslurm31 #MINVER#
  slurmdb_setup_cluster_dims@Base 2.3.1
  slurmdb_setup_cluster_flags@Base 2.3.1
  slurmdb_setup_cluster_name_dims@Base 2.3.1
+ slurmdb_setup_cluster_rec@Base 17.11.2
  slurmdb_setup_plugin_id_select@Base 16.05.0
 #MISSING: 17.02.2# slurmdb_slurmdbd_free_id_rc_msg@Base 2.3.1
 #MISSING: 17.02.2# slurmdb_slurmdbd_free_list_msg@Base 2.3.1

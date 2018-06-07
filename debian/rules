@@ -75,8 +75,8 @@ override_dh_install:
 	dh_install --list-missing
 
 override_dh_strip:
-	dh_strip -plibslurm31 --dbg-package=libslurm31-dbg
-	dh_strip -plibslurmdb31 --dbg-package=libslurmdb31-dbg
+	dh_strip -plibslurm32 --dbg-package=libslurm32-dbg
+	dh_strip -plibslurmdb32 --dbg-package=libslurmdb32-dbg
 	dh_strip -plibpmi0 --dbg-package=libpmi0-dbg
 	dh_strip -plibpmi2-0 --dbg-package=libpmi2-0-dbg
 	dh_strip -pslurm-wlm-basic-plugins --dbg-package=slurm-wlm-basic-plugins-dbg

@@ -15,7 +15,7 @@ Last-Update: 2015-09-23
  3 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/doc/man/man1/strigger.1 b/doc/man/man1/strigger.1
-index 63f628a..dfac33b 100644
+index 03770da..1ff6afa 100644
 --- a/doc/man/man1/strigger.1
 +++ b/doc/man/man1/strigger.1
 @@ -304,7 +304,7 @@ primary slurmctld fails.
@@ -37,10 +37,10 @@ index 63f628a..dfac33b 100644
  > strigger \-\-set \-\-node \-\-down \\
             \-\-program=/usr/sbin/slurm_admin_notify
 diff --git a/doc/man/man5/slurm.conf.5 b/doc/man/man5/slurm.conf.5
-index 05aab2c..80ce6a5 100644
+index 8372636..329a7ae 100644
 --- a/doc/man/man5/slurm.conf.5
 +++ b/doc/man/man5/slurm.conf.5
-@@ -1341,7 +1341,7 @@ local address itself.
+@@ -1361,7 +1361,7 @@ local address itself.
  .TP
  \fBMailProg\fR
  Fully qualified pathname to the program used to send email per user request.
@@ -50,10 +50,10 @@ index 05aab2c..80ce6a5 100644
  .TP
  \fBMaxArraySize\fR
 diff --git a/src/common/read_config.h b/src/common/read_config.h
-index b8fb823..5db2c2e 100644
+index 8928227..650c1d5 100644
 --- a/src/common/read_config.h
 +++ b/src/common/read_config.h
-@@ -117,7 +117,7 @@ extern char *default_plugstack;
+@@ -124,7 +124,7 @@ extern uint16_t drop_priv_flag;
  #  define DEFAULT_LAUNCH_TYPE         "launch/slurm"
  #endif
  

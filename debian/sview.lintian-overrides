@@ -1,0 +1,2 @@
+sview: hardening-no-bindnow
+sview: binary-or-shlib-defines-rpath

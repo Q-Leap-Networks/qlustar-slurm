@@ -15,6 +15,7 @@ endif
 include /usr/share/dpkg/architecture.mk
 
 PAMDIR=/lib/$(DEB_HOST_MULTIARCH)/security
+MULTIARCHLIBDIR=/usr/lib/$(DEB_HOST_MULTIARCH)
 
 export PERL_ARCHLIB := $(shell perl -MConfig -e \
   'print substr($$Config{vendorarch}, 1)')
@@ -26,11 +27,12 @@ override_dh_autoreconf:
 	dh_autoreconf -- sh -c ./autogen.sh
 
 override_dh_auto_configure:
-	dh_auto_configure -- --libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) \
+	dh_auto_configure -- --libdir=$(MULTIARCHLIBDIR) \
 	  --sysconfdir=/etc/qlustar/common/slurm-llnl \
 	  --localstatedir=/var/run/slurm-llnl --without-rpath \
 	  --with-munge --with-pam_dir=$(PAMDIR) --enable-pam \
-	  --with-multiple-slurmd --disable-debug 
+	  --with-pmix=$(MULTIARCHLIBDIR)/pmix --with-hwloc \
+	  --enable-multiple-slurmd --disable-debug 
 
 override_dh_auto_install:
 	dh_auto_install

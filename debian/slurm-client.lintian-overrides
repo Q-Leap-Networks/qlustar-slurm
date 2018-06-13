@@ -1,0 +1,5 @@
+slurm-client: manpage-has-errors-from-man
+slurm-client: conflicts-with-version
+slurm-client: hardening-no-bindnow
+spelling-error-in-binary
+slurm-client: binary-or-shlib-defines-rpath

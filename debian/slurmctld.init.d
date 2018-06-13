@@ -60,7 +60,7 @@ fi
 # setup library paths for slurm and munge support
 export LD_LIBRARY_PATH=$LIBDIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 
-#Function to check for cert and key presence and key vulnerabilty
+#Function to check for cert and key presence
 checkcertkey()
 {
   MISSING=""
@@ -80,17 +80,6 @@ checkcertkey()
     echo Please follow the instructions in \
       /usr/share/doc/slurmctld/README.cryptotype-openssl
     exit 0
-  fi
-
-  if [ -f "$keyfile" ] && [ "$1" = "slurmctld" ] ; then
-    keycheck=$(openssl-vulnkey $keyfile | cut -d : -f 1)
-    if [ "$keycheck" = "COMPROMISED" ] ; then
-      echo Your slurm key stored in the file $keyfile
-      echo is vulnerable because has been created with a buggy openssl.
-      echo Please rebuild it with openssl version \>= 0.9.8g-9
-      echo More information in /usr/share/doc/slurmctld/README.Debian
-      exit 0
-    fi
   fi
 }
 

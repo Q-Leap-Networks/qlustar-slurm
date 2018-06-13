@@ -60,7 +60,7 @@ fi
 # setup library paths for slurm and munge support
 export LD_LIBRARY_PATH=$LIBDIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 
-#Function to check for cert and key presence and key vulnerabilty
+#Function to check for cert and key presence
 checkcertkey()
 {
   MISSING=""
@@ -237,7 +237,7 @@ case "$1" in
         ;;
     startclean)
         SLURMD_OPTIONS="-c $SLURMD_OPTIONS"
-        star slurmd "$SLURMD_OPTIONS"
+        start slurmd "$SLURMD_OPTIONS"
         ;;
     stop)
 	slurmstop

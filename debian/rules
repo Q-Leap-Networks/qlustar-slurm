@@ -73,9 +73,6 @@ override_dh_auto_install:
 	# Remove embedded jquery.min.js
 	rm -f debian/tmp/usr/share/doc/slurm-wlm-doc/html/jquery.min.js
 
-override_dh_install:
-	dh_install --list-missing
-
 override_dh_strip:
 	dh_strip -plibslurm32 --dbg-package=libslurm32-dbg
 	dh_strip -plibslurmdb32 --dbg-package=libslurmdb32-dbg
@@ -98,10 +95,5 @@ override_dh_strip:
 	dh_strip -pslurm-wlm-basic-plugins-dev
 	strip --strip-debug --remove-section=.comment \
 		--remove-section=.note debian/slurm-wlm-basic-plugins-dev/usr/lib/*/slurm/*.a
-
-#override_dh_installinit:
-#	dh_installinit --package=slurmdbd --update-rcd-params="defaults 98 02"
-#	dh_installinit --package=slurmctld --update-rcd-params="defaults 99 01"
-#	dh_installinit --package=slurmd --update-rcd-params="defaults 99 01"
 
 override_dh_auto_test:

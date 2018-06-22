@@ -24,23 +24,13 @@ BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: pkgconfig(lua) >= 5.1.0
 BuildRequires: hwloc-devel
 BuildRequires: numactl-devel
+BuildRequires: libibmad-devel
+BuildRequires: rdma-core-devel
+BuildRequires: freeipmi-devel
+BuildRequires: hdf5-devel
 
 BuildRequires: pmix-devel
 Requires: pmix
-
-#  Allow override of sysconfdir via _slurm_sysconfdir.
-#  Note 'global' instead of 'define' needed here to work around apparent
-#   bug in rpm macro scoping (or something...)
-%{!?_slurm_sysconfdir: %global _slurm_sysconfdir /etc/qlustar/common/slurm-llnl}
-%define _sysconfdir %_slurm_sysconfdir
-
-#  Allow override of datadir via _slurm_datadir.
-%{!?_slurm_datadir: %global _slurm_datadir %{_prefix}/share}
-%define _datadir %{_slurm_datadir}
-
-#  Allow override of mandir via _slurm_mandir.
-%{!?_slurm_mandir: %global _slurm_mandir %{_datadir}/man}
-%define _mandir %{_slurm_mandir}
 
 # Never allow rpm to strip binaries as this will break
 #  parallel debugging capability
@@ -167,13 +157,15 @@ according to the Slurm
 
 %build
 %configure \
-	%{?_without_debug:--disable-debug} \
-	%{?_with_pam_dir} \
-	%{?_with_cpusetdir} \
-	%{?_with_pmix} \
-	%{?_with_freeipmi} \
-	%{?_with_hdf5} \
-	%{?_with_shared_libslurm} \
+	--sysconfdir=/etc/qlustar/common/slurm-llnl \
+	--localstatedir=/var/run/slurm-llnl \
+	--without-rpath \
+	--with-munge \
+	--with-pam_dir=/usr/lib64/security \
+	--enable-pam \
+	--with-pmix \
+	--with-hwloc \
+	--disable-debug 
 	%{?_with_cflags}
 
 make %{?_smp_mflags}
@@ -187,6 +179,8 @@ make install DESTDIR=%{buildroot}
 make install-contrib DESTDIR=%{buildroot}
 
 install -D -m644 etc/slurmd.service    %{buildroot}/%{_unitdir}/slurmd.service
+sed -i -e 's,slurmd.pid,slurm-llnl/slurmd.pid,g' %{buildroot}/%{_unitdir}/slurmd.service
+mkdir -p %{buildroot}/var/log/slurm-llnl %{buildroot}/var/lib/slurm-llnl/slurmd %{buildroot}/var/lib/slurm-llnl/checkpoint
 
 rm -f contribs/cray/opt_modulefiles_slurm
 rm -f contribs/cray/slurmsmwd/slurmsmwd.service
@@ -371,6 +365,8 @@ rm -rf %{buildroot}
 %{_sbindir}/slurmd
 %{_sbindir}/slurmstepd
 %{_unitdir}/slurmd.service
+/var/log/slurm-llnl
+/var/lib/slurm-llnl/*
 #############################################################################
 
 %files libpmi

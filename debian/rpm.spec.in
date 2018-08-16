@@ -163,7 +163,7 @@ according to the Slurm
 	--with-munge \
 	--with-pam_dir=/usr/lib64/security \
 	--enable-pam \
-	--with-pmix \
+	--with-pmix=/usr \
 	--with-hwloc \
 	--disable-debug 
 	%{?_with_cflags}

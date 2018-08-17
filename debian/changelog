@@ -3,8 +3,9 @@ slurm-llnl (17.11.7-ql.3) stable; urgency=medium
   * New upstream 17.11.7
   * Merge upstream d/dir changes
   * Add RPM support
+  * slurm-wlm-basic-plugins needs explicit libpmix2 dependency
 
- -- Roland Fehrenbacher <rf@q-leap.de>  Thu, 16 Aug 2018 12:43:15 +0200
+ -- Roland Fehrenbacher <rf@q-leap.de>  Fri, 17 Aug 2018 08:45:34 +0000
 
 slurm-llnl (17.02.11-ql.1) stable; urgency=medium
 

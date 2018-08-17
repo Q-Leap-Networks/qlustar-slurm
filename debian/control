@@ -279,7 +279,8 @@ Description: SLURM docmentation
 
 Package: slurm-wlm-basic-plugins
 Architecture: any
-Depends: ${misc:Depends},
+Depends: libpmix2,
+         ${misc:Depends},
          ${shlibs:Depends},
 Description: SLURM basic plugins
  SLURM, the Simple Linux Utility for Resource Management,

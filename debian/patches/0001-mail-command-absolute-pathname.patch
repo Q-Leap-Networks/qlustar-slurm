@@ -37,7 +37,7 @@ index 03770da..1ff6afa 100644
  > strigger \-\-set \-\-node \-\-down \\
             \-\-program=/usr/sbin/slurm_admin_notify
 diff --git a/doc/man/man5/slurm.conf.5 b/doc/man/man5/slurm.conf.5
-index 8372636..329a7ae 100644
+index 3872db7..b62fe9d 100644
 --- a/doc/man/man5/slurm.conf.5
 +++ b/doc/man/man5/slurm.conf.5
 @@ -1361,7 +1361,7 @@ local address itself.

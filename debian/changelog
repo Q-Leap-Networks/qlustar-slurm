@@ -1,3 +1,9 @@
+slurm-llnl (17.11.9.2-ql.2) stable; urgency=medium
+
+  * RPM: Add pam libs
+
+ -- Roland Fehrenbacher <rf@q-leap.de>  Wed, 26 Sep 2018 16:00:47 +0200
+
 slurm-llnl (17.11.9.2-ql.1) stable; urgency=medium
 
   * New upstream 17.11.9.2

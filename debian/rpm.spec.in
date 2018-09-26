@@ -136,19 +136,16 @@ about jobs that are currently active on the machine. This output is built
 using the Slurm utilities, sinfo, squeue and scontrol, the man pages for these
 utilities will provide more information and greater depth of understanding.
 
-%if %{with pam}
-%package pam_slurm
+%package pam
 Summary: PAM module for restricting access to compute nodes via Slurm
 Group: System Environment/Base
 Requires: %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: pam-devel
-Obsoletes: pam_slurm
-%description pam_slurm
+%description pam
 This module restricts access to compute nodes in a cluster where Slurm is in
 use.  Access is granted to root, any user with an Slurm-launched job currently
 running on the node, or any user who has allocated resources on the node
 according to the Slurm
-%endif
 
 
 #############################################################################
@@ -271,27 +268,6 @@ Name: %{name}
 Version: %{version}
 EOF
 
-LIST=./pam.files
-touch $LIST
-%if %{?with_pam_dir}0
-    test -f %{buildroot}/%{with_pam_dir}/pam_slurm.so	&&
-	echo %{with_pam_dir}/pam_slurm.so	>>$LIST
-    test -f %{buildroot}/%{with_pam_dir}/pam_slurm_adopt.so	&&
-	echo %{with_pam_dir}/pam_slurm_adopt.so	>>$LIST
-%else
-    test -f %{buildroot}/lib/security/pam_slurm.so	&&
-	echo /lib/security/pam_slurm.so		>>$LIST
-    test -f %{buildroot}/lib32/security/pam_slurm.so	&&
-	echo /lib32/security/pam_slurm.so	>>$LIST
-    test -f %{buildroot}/lib64/security/pam_slurm.so	&&
-	echo /lib64/security/pam_slurm.so	>>$LIST
-    test -f %{buildroot}/lib/security/pam_slurm_adopt.so		&&
-	echo /lib/security/pam_slurm_adopt.so		>>$LIST
-    test -f %{buildroot}/lib32/security/pam_slurm_adopt.so		&&
-	echo /lib32/security/pam_slurm_adopt.so		>>$LIST
-    test -f %{buildroot}/lib64/security/pam_slurm_adopt.so		&&
-	echo /lib64/security/pam_slurm_adopt.so		>>$LIST
-%endif
 #############################################################################
 
 %clean
@@ -412,10 +388,10 @@ rm -rf %{buildroot}
 %{_mandir}/man1/sjstat*
 #############################################################################
 
-%if %{with pam}
-%files -f pam.files pam_slurm
+%files pam
 %defattr(-,root,root)
-%endif
+/usr/lib64/security/pam_slurm.so
+/usr/lib64/security/pam_slurm_adopt.so
 #############################################################################
 
 %pre

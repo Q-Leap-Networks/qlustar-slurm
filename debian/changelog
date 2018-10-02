@@ -1,4 +1,4 @@
-slurm-llnl (17.11.9.2-ql.2) stable; urgency=medium
+slurm-llnl (17.11.9.2-ql.3) stable; urgency=medium
 
   * RPM: Add pam libs
 

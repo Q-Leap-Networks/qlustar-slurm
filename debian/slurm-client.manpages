@@ -17,7 +17,6 @@ debian/tmp/usr/share/man/man1/sh5util.1
 debian/tmp/usr/share/man/man1/squeue.1
 debian/tmp/usr/share/man/man1/sbcast.1
 debian/tmp/usr/share/man/man1/sacct.1
-debian/tmp/usr/share/man/man1/sacctmgr.1
 debian/tmp/usr/share/man/man8/spank.8
 debian/tmp/usr/share/man/man5/ext_sensors.conf.5
 debian/tmp/usr/share/man/man5/gres.conf.5

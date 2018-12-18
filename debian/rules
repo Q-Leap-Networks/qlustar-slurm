@@ -5,7 +5,6 @@
 #export DH_VERBOSE=1
 
 DEBVENDOR  := $(shell dpkg-vendor --query Vendor)
-
 ifeq ($(DEBVENDOR), Qlustar)
     # Qlustar specific stuff
     include /usr/share/ql-deb-utils/Makefile
@@ -21,10 +20,7 @@ export PERL_ARCHLIB := $(shell perl -MConfig -e \
   'print substr($$Config{vendorarch}, 1)')
 
 %:
-	dh $@ --parallel --with autoreconf --with systemd
-
-override_dh_autoreconf:
-	dh_autoreconf -- sh -c ./autogen.sh
+	dh $@ --with autoreconf
 
 override_dh_auto_configure:
 	dh_auto_configure -- --libdir=$(MULTIARCHLIBDIR) \
@@ -48,7 +44,8 @@ override_dh_auto_install:
 	# Handle pam stuff
 	$(MAKE) -C contribs/pam install DESTDIR=$(CURDIR)/debian/tmp
 
-	# Handle pmi2 stuff
+	# Handle pmi/pmi2 stuff
+	$(MAKE) -C contribs/pmi install DESTDIR=$(CURDIR)/debian/tmp
 	$(MAKE) -C contribs/pmi2 install DESTDIR=$(CURDIR)/debian/tmp
 
 	# Handle libslurm[db]-perl pkgs
@@ -74,26 +71,29 @@ override_dh_auto_install:
 	rm -f debian/tmp/usr/share/doc/slurm-wlm-doc/html/jquery.min.js
 
 override_dh_strip:
-	dh_strip -plibslurm32 --dbg-package=libslurm32-dbg
-	dh_strip -plibslurmdb32 --dbg-package=libslurmdb32-dbg
-	dh_strip -plibpmi0 --dbg-package=libpmi0-dbg
-	dh_strip -plibpmi2-0 --dbg-package=libpmi2-0-dbg
-	dh_strip -pslurm-wlm-basic-plugins --dbg-package=slurm-wlm-basic-plugins-dbg
-	dh_strip -pslurm-client --dbg-package=slurm-client-dbg
-	dh_strip -pslurmd --dbg-package=slurmd-dbg
-	dh_strip -pslurmctld --dbg-package=slurmctld-dbg
-	dh_strip -pslurmdbd --dbg-package=slurmctld-dbg
+	dh_strip -plibslurm33
+	dh_strip -plibslurmdb33
+	dh_strip -plibpmi0
+	dh_strip -plibpmi2-0
+	dh_strip -pslurm-wlm-basic-plugins
+	dh_strip -pslurm-client
+	dh_strip -pslurmd
+	dh_strip -pslurmctld
+	dh_strip -pslurmdbd
 	# we do not care about debug symbols for those pkgs
-	dh_strip -plibslurmdb-perl
-	dh_strip -plibslurm-perl
-	dh_strip -psview
-	dh_strip -plibpam-slurm
-	dh_strip -plibpmi0-dev
-	dh_strip -plibpmi2-0-dev
-	dh_strip -plibslurmdb-dev
-	dh_strip -plibslurm-dev
-	dh_strip -pslurm-wlm-basic-plugins-dev
+	dh_strip -plibslurmdb-perl --no-automatic-dbgsym
+	dh_strip -plibslurm-perl --no-automatic-dbgsym
+	dh_strip -psview --no-automatic-dbgsym
+	dh_strip -plibpam-slurm --no-automatic-dbgsym
+	dh_strip -plibpmi0-dev --no-automatic-dbgsym
+	dh_strip -plibpmi2-0-dev --no-automatic-dbgsym
+	dh_strip -plibslurmdb-dev --no-automatic-dbgsym
+	dh_strip -plibslurm-dev --no-automatic-dbgsym
+	dh_strip -pslurm-wlm-basic-plugins-dev --no-automatic-dbgsym
 	strip --strip-debug --remove-section=.comment \
 		--remove-section=.note debian/slurm-wlm-basic-plugins-dev/usr/lib/*/slurm/*.a
 
 override_dh_auto_test:
+
+override_dh_compress:
+	dh_compress -X.pdf -X.ttf

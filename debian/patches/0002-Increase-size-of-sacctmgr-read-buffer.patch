@@ -18,7 +18,7 @@ Last-Update: 2014-09-15
  2 files changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/src/sacctmgr/sacctmgr.c b/src/sacctmgr/sacctmgr.c
-index ed4ae35..26538c1 100644
+index 70633b0..76cbb5f 100644
 --- a/src/sacctmgr/sacctmgr.c
 +++ b/src/sacctmgr/sacctmgr.c
 @@ -46,8 +46,6 @@
@@ -31,7 +31,7 @@ index ed4ae35..26538c1 100644
  int exit_code;		/* sacctmgr's exit code, =1 on any error at any time */
  int exit_flag;		/* program to terminate if =1 */
 diff --git a/src/sacctmgr/sacctmgr.h b/src/sacctmgr/sacctmgr.h
-index be7b0cf..d134e80 100644
+index 9aeb34a..78f1f72 100644
 --- a/src/sacctmgr/sacctmgr.h
 +++ b/src/sacctmgr/sacctmgr.h
 @@ -67,7 +67,7 @@

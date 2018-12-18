@@ -1,1 +1,2 @@
+debian/plugstack.conf etc/qlustar/common/slurm-llnl
 usr/lib/*/slurm/*.so

@@ -1,5 +1,4 @@
-# SymbolsHelper-Confirmed: 17.11.2~ amd64
-libslurmdb.so.32 libslurmdb32 #MINVER#
+libslurmdb.so.33 libslurmdb33 #MINVER#
 #MISSING: 17.11.2~# slurm_accept_msg_conn@Base 2.2.0
 #MISSING: 14.11.0# slurm_accept_stream@Base 2.2.0
 #MISSING: 17.11.2~# slurm_accounting_enforce_string@Base 2.2.0
@@ -1036,6 +1035,7 @@ libslurmdb.so.32 libslurmdb32 #MINVER#
  slurmdb_associations_get@Base 2.2.0
  slurmdb_associations_modify@Base 2.2.0
  slurmdb_associations_remove@Base 2.2.0
+ slurmdb_ave_tres_usage@Base 18.08.0
  slurmdb_clear_stats@Base 17.02.0
  slurmdb_cluster_fed_states_str@Base 17.02.0
  slurmdb_cluster_flags_2_str@Base 2.2.0
@@ -1048,6 +1048,7 @@ libslurmdb.so.32 libslurmdb32 #MINVER#
  slurmdb_config_get@Base 2.2.0
  slurmdb_connection_close@Base 2.2.0
  slurmdb_connection_commit@Base 17.11.2
+ slurmdb_connection_get2@Base 18.08.0
  slurmdb_connection_get@Base 2.2.0
  slurmdb_coord_add@Base 2.2.0
  slurmdb_coord_remove@Base 2.2.0
@@ -1099,6 +1100,7 @@ libslurmdb.so.32 libslurmdb32 #MINVER#
  slurmdb_destroy_reservation_cond@Base 2.2.0
  slurmdb_destroy_reservation_rec@Base 2.2.0
  slurmdb_destroy_selected_step@Base 2.2.0
+ slurmdb_destroy_slurmdb_stats@Base 18.08.0
  slurmdb_destroy_stats_rec@Base 17.02.0
  slurmdb_destroy_step_rec@Base 2.2.0
  slurmdb_destroy_tres_cond@Base 15.08.0
@@ -1135,6 +1137,7 @@ libslurmdb.so.32 libslurmdb32 #MINVER#
  slurmdb_format_tres_str@Base 15.08.0
  slurmdb_free_assoc_rec_members@Base 15.08.0
  slurmdb_free_qos_rec_members@Base 15.08.0
+ slurmdb_free_slurmdb_stats_members@Base 18.08.0
  slurmdb_get_acct_hierarchical_rec_list@Base 1.2.0
  slurmdb_get_acct_hierarchical_rec_list_no_lft@Base 16.05.0
 #MISSING: 17.11.2# slurmdb_get_federations@Base 17.02.0
@@ -1143,7 +1146,7 @@ libslurmdb.so.32 libslurmdb32 #MINVER#
  slurmdb_get_hierarchical_sorted_assoc_list@Base 2.2.0
  slurmdb_get_info_cluster@Base 2.2.0
 #MISSING: 15.08.10# slurmdb_get_new_tres_pos@Base 15.08.0
- slurmdb_get_old_tres_pos@Base 15.08.10
+#MISSING: 18.08.0# slurmdb_get_old_tres_pos@Base 15.08.10
  slurmdb_get_qos_complete_str_bitstr@Base 15.08.0
  slurmdb_get_selected_step_id@Base 14.11.0
  slurmdb_get_stats@Base 17.02.0

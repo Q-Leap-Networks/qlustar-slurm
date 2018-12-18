@@ -9,16 +9,14 @@ Bug-Debian: http://bugs.debian.org/588862
 Forwarded: no
 Last-Update: 2015-09-23
 ---
- doc/man/man1/strigger.1   | 4 ++--
- doc/man/man5/slurm.conf.5 | 2 +-
- src/common/read_config.h  | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ doc/man/man1/strigger.1 | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/doc/man/man1/strigger.1 b/doc/man/man1/strigger.1
-index 03770da..1ff6afa 100644
+index 9273fd5..4d83c79 100644
 --- a/doc/man/man1/strigger.1
 +++ b/doc/man/man1/strigger.1
-@@ -304,7 +304,7 @@ primary slurmctld fails.
+@@ -300,7 +300,7 @@ primary slurmctld fails.
  strigger \-\-set \-\-primary_slurmctld_failure \\
           \-\-program=/usr/sbin/primary_slurmctld_failure
  # Notify the administrator of the failure using by e\-mail
@@ -27,7 +25,7 @@ index 03770da..1ff6afa 100644
  
  > strigger \-\-set \-\-primary_slurmctld_failure \\
             \-\-program=/usr/sbin/primary_slurmctld_failure
-@@ -323,7 +323,7 @@ argument to the script by Slurm).
+@@ -319,7 +319,7 @@ argument to the script by Slurm).
  strigger \-\-set \-\-node \-\-down \\
           \-\-program=/usr/sbin/slurm_admin_notify
  # Notify administrator using by e\-mail
@@ -36,29 +34,3 @@ index 03770da..1ff6afa 100644
  
  > strigger \-\-set \-\-node \-\-down \\
             \-\-program=/usr/sbin/slurm_admin_notify
-diff --git a/doc/man/man5/slurm.conf.5 b/doc/man/man5/slurm.conf.5
-index 3872db7..b62fe9d 100644
---- a/doc/man/man5/slurm.conf.5
-+++ b/doc/man/man5/slurm.conf.5
-@@ -1361,7 +1361,7 @@ local address itself.
- .TP
- \fBMailProg\fR
- Fully qualified pathname to the program used to send email per user request.
--The default value is "/bin/mail".
-+The default value is "/usr/bin/mail".
- 
- .TP
- \fBMaxArraySize\fR
-diff --git a/src/common/read_config.h b/src/common/read_config.h
-index 8928227..650c1d5 100644
---- a/src/common/read_config.h
-+++ b/src/common/read_config.h
-@@ -124,7 +124,7 @@ extern uint16_t drop_priv_flag;
- #  define DEFAULT_LAUNCH_TYPE         "launch/slurm"
- #endif
- 
--#define DEFAULT_MAIL_PROG           "/bin/mail"
-+#define DEFAULT_MAIL_PROG           "/usr/bin/mail"
- #define DEFAULT_MAX_ARRAY_SIZE      1001
- #define DEFAULT_MAX_JOB_COUNT       10000
- #define DEFAULT_MAX_JOB_ID          0x03ff0000

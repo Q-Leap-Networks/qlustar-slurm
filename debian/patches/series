@@ -1,2 +1,4 @@
 0001-mail-command-absolute-pathname.patch
 0002-Increase-size-of-sacctmgr-read-buffer.patch
+0003-Fix-man-pages-typos.patch
+0004-Fix-rpath-issue.patch

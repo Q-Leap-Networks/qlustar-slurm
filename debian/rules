@@ -28,6 +28,7 @@ override_dh_auto_configure:
 	  --localstatedir=/var/run/slurm-llnl --without-rpath \
 	  --with-munge --with-pam_dir=$(PAMDIR) --enable-pam \
 	  --with-pmix=$(MULTIARCHLIBDIR)/pmix --with-hwloc \
+	  --with-ucx \
 	  --enable-multiple-slurmd --disable-debug 
 
 override_dh_auto_install:

@@ -23,12 +23,13 @@ export PERL_ARCHLIB := $(shell perl -MConfig -e \
 	dh $@ --with autoreconf
 
 override_dh_auto_configure:
+	# Don't enable crappy ucx interface before it's clear what versions
+	# slurm supports
 	dh_auto_configure -- --libdir=$(MULTIARCHLIBDIR) \
 	  --sysconfdir=/etc/qlustar/common/slurm-llnl \
 	  --localstatedir=/var/run/slurm-llnl --without-rpath \
 	  --with-munge --with-pam_dir=$(PAMDIR) --enable-pam \
 	  --with-pmix=$(MULTIARCHLIBDIR)/pmix --with-hwloc \
-	  --with-ucx \
 	  --enable-multiple-slurmd --disable-debug 
 
 override_dh_auto_install:

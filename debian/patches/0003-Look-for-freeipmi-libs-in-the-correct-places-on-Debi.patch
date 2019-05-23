@@ -1,0 +1,21 @@
+From: Roland Fehrenbacher <rf@q-leap.de>
+Date: Thu, 23 May 2019 16:29:50 +0000
+Subject: Look for freeipmi libs in the correct places on Debian/Ubuntu/amd64
+
+---
+ auxdir/x_ac_freeipmi.m4 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/auxdir/x_ac_freeipmi.m4 b/auxdir/x_ac_freeipmi.m4
+index 499b25a..1659b1b 100644
+--- a/auxdir/x_ac_freeipmi.m4
++++ b/auxdir/x_ac_freeipmi.m4
+@@ -12,7 +12,7 @@
+ AC_DEFUN([X_AC_FREEIPMI],
+ [
+   _x_ac_freeipmi_dirs="/usr /usr/local"
+-  _x_ac_freeipmi_libs="lib64 lib"
++  _x_ac_freeipmi_libs="lib64 lib lib/x86_64-linux-gnu"
+ 
+   AC_ARG_WITH(
+     [freeipmi],

@@ -1,8 +1,8 @@
-slurm-llnl (18.08.7-ql.1) stable; urgency=medium
+slurm-llnl (18.08.7-ql.2) stable; urgency=medium
 
   * New upstream release
 
- -- Roland Fehrenbacher <rf@q-leap.de>  Thu, 16 May 2019 09:02:50 +0000
+ -- Roland Fehrenbacher <rf@q-leap.de>  Thu, 23 May 2019 18:31:18 +0200
 
 slurm-llnl (18.08.4-ql.1) stable; urgency=medium
 

@@ -24,7 +24,9 @@ BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: pkgconfig(lua) >= 5.1.0
 BuildRequires: hwloc-devel
 BuildRequires: numactl-devel
+BuildRequires: libcurl-devel
 BuildRequires: libibmad-devel
+BuildRequires: libssh2-devel
 BuildRequires: rdma-core-devel
 BuildRequires: freeipmi-devel
 BuildRequires: hdf5-devel

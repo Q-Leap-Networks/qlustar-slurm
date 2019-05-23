@@ -12,7 +12,7 @@
 AC_DEFUN([X_AC_FREEIPMI],
 [
   _x_ac_freeipmi_dirs="/usr /usr/local"
-  _x_ac_freeipmi_libs="lib64 lib"
+  _x_ac_freeipmi_libs="lib64 lib lib/x86_64-linux-gnu"
 
   AC_ARG_WITH(
     [freeipmi],

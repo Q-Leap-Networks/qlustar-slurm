@@ -1,3 +1,9 @@
+slurm-llnl (18.08.8-ql.1) stable; urgency=medium
+
+  * New upstream release / includes fix for CVE-2019-12838
+
+ -- Roland Fehrenbacher <rf@q-leap.de>  Tue, 17 Sep 2019 07:49:29 +0000
+
 slurm-llnl (18.08.7-ql.2) stable; urgency=medium
 
   * New upstream release

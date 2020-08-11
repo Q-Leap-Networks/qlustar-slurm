@@ -12,4 +12,3 @@
 # This happens because because slurm_job_preempt_mode is contained in
 # /usr/sbin/slurmctld and will never be referenced when running sinfo.
 hardening-no-bindnow
-spelling-error-in-binary

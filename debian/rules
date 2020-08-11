@@ -45,6 +45,7 @@ override_dh_auto_install:
 
 	# Handle pam stuff
 	$(MAKE) -C contribs/pam install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) -C contribs/pam_slurm_adopt install DESTDIR=$(CURDIR)/debian/tmp
 
 	# Handle pmi/pmi2 stuff
 	$(MAKE) -C contribs/pmi install DESTDIR=$(CURDIR)/debian/tmp
@@ -72,9 +73,9 @@ override_dh_auto_install:
 	# Remove embedded jquery.min.js
 	rm -f debian/tmp/usr/share/doc/slurm-wlm-doc/html/jquery.min.js
 
+
 override_dh_strip:
-	dh_strip -plibslurm33
-	dh_strip -plibslurmdb33
+	dh_strip -plibslurm35
 	dh_strip -plibpmi0
 	dh_strip -plibpmi2-0
 	dh_strip -pslurm-wlm-basic-plugins
@@ -89,7 +90,6 @@ override_dh_strip:
 	dh_strip -plibpam-slurm --no-automatic-dbgsym
 	dh_strip -plibpmi0-dev --no-automatic-dbgsym
 	dh_strip -plibpmi2-0-dev --no-automatic-dbgsym
-	dh_strip -plibslurmdb-dev --no-automatic-dbgsym
 	dh_strip -plibslurm-dev --no-automatic-dbgsym
 	dh_strip -pslurm-wlm-basic-plugins-dev --no-automatic-dbgsym
 	strip --strip-debug --remove-section=.comment \

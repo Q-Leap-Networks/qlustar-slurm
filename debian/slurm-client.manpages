@@ -1,6 +1,5 @@
 debian/tmp/usr/share/man/man1/scancel.1
 debian/tmp/usr/share/man/man1/sattach.1
-debian/tmp/usr/share/man/man1/smap.1
 debian/tmp/usr/share/man/man1/strigger.1
 debian/tmp/usr/share/man/man1/sstat.1
 debian/tmp/usr/share/man/man1/sprio.1
@@ -21,7 +20,6 @@ debian/tmp/usr/share/man/man8/spank.8
 debian/tmp/usr/share/man/man5/ext_sensors.conf.5
 debian/tmp/usr/share/man/man5/gres.conf.5
 debian/tmp/usr/share/man/man5/acct_gather.conf.5
-debian/tmp/usr/share/man/man5/cray.conf.5
 debian/tmp/usr/share/man/man5/cgroup.conf.5
 debian/tmp/usr/share/man/man5/nonstop.conf.5
 debian/tmp/usr/share/man/man5/topology.conf.5

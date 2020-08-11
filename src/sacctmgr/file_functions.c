@@ -42,7 +42,7 @@
 #include "src/common/strlcpy.h"
 #include "src/common/uid.h"
 
-#define BUFFER_SIZE 4096
+#define BUFFER_SIZE 524288
 
 typedef struct {
 	slurmdb_admin_level_t admin;

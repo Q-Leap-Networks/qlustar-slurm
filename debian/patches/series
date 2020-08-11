@@ -1,3 +1,4 @@
 0001-mail-command-absolute-pathname.patch
-0002-Increase-size-of-sacctmgr-read-buffer.patch
-0003-Look-for-freeipmi-libs-in-the-correct-places-on-Debi.patch
+0002-Look-for-freeipmi-libs-in-the-correct-places-on-Debi.patch
+0003-Increase-sacctmgr-buffer-size.patch
+0004-Fix-default-pidfile-paths.patch

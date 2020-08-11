@@ -7,7 +7,6 @@ usr/bin/sbcast
 usr/bin/srun
 usr/bin/squeue
 usr/bin/sprio
-usr/bin/smap
 usr/bin/sdiag
 usr/bin/strigger
 usr/bin/sinfo

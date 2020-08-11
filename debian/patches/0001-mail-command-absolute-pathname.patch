@@ -13,10 +13,10 @@ Last-Update: 2015-09-23
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/doc/man/man1/strigger.1 b/doc/man/man1/strigger.1
-index 9273fd5..4d83c79 100644
+index 8bf0d03..1b3aac2 100644
 --- a/doc/man/man1/strigger.1
 +++ b/doc/man/man1/strigger.1
-@@ -300,7 +300,7 @@ primary slurmctld fails.
+@@ -322,7 +322,7 @@ primary slurmctld fails.
  strigger \-\-set \-\-primary_slurmctld_failure \\
           \-\-program=/usr/sbin/primary_slurmctld_failure
  # Notify the administrator of the failure using by e\-mail
@@ -25,7 +25,7 @@ index 9273fd5..4d83c79 100644
  
  > strigger \-\-set \-\-primary_slurmctld_failure \\
             \-\-program=/usr/sbin/primary_slurmctld_failure
-@@ -319,7 +319,7 @@ argument to the script by Slurm).
+@@ -341,7 +341,7 @@ argument to the script by Slurm).
  strigger \-\-set \-\-node \-\-down \\
           \-\-program=/usr/sbin/slurm_admin_notify
  # Notify administrator using by e\-mail

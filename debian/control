@@ -5,14 +5,13 @@ Maintainer: Q-Leap Debian Packaging Team <dpkg-team@q-leap.de>
 Uploaders: Roland Fehrenbacher <rf@q-leap.de>,
 Build-Depends: autotools-dev,
                chrpath,
-               debhelper (>= 11),
+               debhelper-compat (= 12),
                dh-autoreconf,
                dh-exec,
                dh-systemd (>= 1.5),
                hdf5-helpers,
 	       libcurl4-openssl-dev,
 	       libfreeipmi-dev,
-               libglade2-dev,
                libgtk2.0-dev,
                libhdf5-dev,
                libhwloc-dev,
@@ -24,17 +23,16 @@ Build-Depends: autotools-dev,
                libmunge-dev,
                libncurses5-dev,
                libnuma-dev,
+	       libnvidia-ml-dev,
                libpam0g-dev,
                libperl-dev,
                libpmix-dev,
                libreadline-dev,
                librrd-dev,
-	       libssh2-1-dev,
-               libssl-dev,
                po-debconf,
-               python,
+               python3,
                ql-deb-utils,
-Standards-Version: 4.1.4
+Standards-Version: 4.5.0
 Homepage: http://slurm.schedmd.com
 
 Package: slurm-client
@@ -81,18 +79,7 @@ Description: SLURM central management daemon
  interconnect agnostic.
  This package contains the central management demon slurmctld.
 
-Package: libslurmdb33
-Section: libs
-Architecture: any
-Pre-Depends: ${misc:Pre-Depends},
-Depends: ${misc:Depends},
-         ${shlibs:Depends},
-Description: Runtime library files for the SLURM DataBase Daemon
- SLURM, the Simple Linux Utility for Resource Management,
- is an open-source cluster resource management and job scheduling.
- This package contains the SLURM DataBase Daemon runtime library.
-
-Package: libslurm33
+Package: libslurm35
 Section: libs
 Architecture: any
 Pre-Depends: ${misc:Pre-Depends},
@@ -129,7 +116,7 @@ Description: SLURM PMI2 library implementation
 Package: libslurm-dev
 Section: libdevel
 Architecture: any
-Depends: libslurm33 (= ${binary:Version}),
+Depends: libslurm35 (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends},
 Description: SLURM development files
@@ -137,22 +124,11 @@ Description: SLURM development files
  is an open-source cluster resource management and job scheduling.
  This package contains SLURM static library and header files.
 
-Package: libslurmdb-dev
-Section: libdevel
-Architecture: any
-Depends: libslurmdb33 (= ${binary:Version}),
-         ${misc:Depends},
-         ${shlibs:Depends},
-Description: SLURM DataBase Daemon development files
- SLURM, the Simple Linux Utility for Resource Management,
- is an open-source cluster resource management and job scheduling.
- This package contains SLURM DataBase Daemon static library and header files.
-
 Package: libpmi0-dev
 Section: libdevel
 Architecture: any
 Depends: libpmi0 (= ${binary:Version}),
-         libslurm33 (= ${binary:Version}),
+         libslurm35 (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends},
 Description: SLURM PMI library implementation development files
@@ -165,7 +141,7 @@ Package: libpmi2-0-dev
 Section: libdevel
 Architecture: any
 Depends: libpmi2-0 (= ${binary:Version}),
-         libslurm33 (= ${binary:Version}),
+         libslurm35 (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends},
 Description: SLURM PMI2 library implementation development files
@@ -286,3 +262,16 @@ Description: PAM module to authenticate using the SLURM resource manager
  nodes where SLURM performs resource management. Access to the node is
  restricted to user root and users who have been allocated resources on
  that node.
+
+Package: libpam-slurm-adopt
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends}
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends}
+Description: PAM module to authenticate users running a SLURM job and track their processes
+ Pluggable Authentication Module (PAM) for restricting access to compute
+ nodes where SLURM performs resource management to users who have a
+ running job. The user's connection is "adopted" into the "external"
+ step of the job so that processes spawned are tracked and SLURM can
+ perform a complete cleanup when the job is completed.

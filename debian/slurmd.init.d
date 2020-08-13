@@ -6,7 +6,7 @@
 #              resources and distributes work to those resources.
 #
 # processname: /usr/sbin/slurmd
-# pidfile: /var/run/slurm-llnl/slurmd.pid
+# pidfile: /run/slurm/slurmd.pid
 #
 # config: /etc/default/slurmd
 #
@@ -108,8 +108,8 @@ start() {
   fi
 
   # Create run-time variable data
-  mkdir -p /var/run/slurm-llnl
-  chown slurm:slurm /var/run/slurm-llnl
+  mkdir -p /run/slurm
+  chown slurm:slurm /run/slurm
 
   # Checking if SlurmdSpoolDir is under run
   if [ "$1" = "slurmd" ] ; then
@@ -117,9 +117,9 @@ start() {
                        | grep -v "^ *#")
     SDIRLOCATION=${SDIRLOCATION##*=}
     SDIRLOCATION=${SDIRLOCATION%#*}
-    if [ "${SDIRLOCATION}" = "/var/run/slurm-llnl/slurmd" ] ; then
-      if ! [ -e /var/run/slurm-llnl/slurmd ] ; then
-        ln -s /var/lib/slurm-llnl/slurmd /var/run/slurm-llnl/slurmd
+    if [ "${SDIRLOCATION}" = "/run/slurm/slurmd" ] ; then
+      if ! [ -e /run/slurm/slurmd ] ; then
+        ln -s /var/lib/slurm-llnl/slurmd /run/slurm/slurmd
       fi
     fi
   fi
@@ -157,7 +157,7 @@ getpidfile() {
         dpidfile=${dpidfile##*=}
         dpidfile=${dpidfile%#*}
     else
-        dpidfile=/var/run/${1}.pid
+        dpidfile=/run/${1}.pid
     fi
 
     echo $dpidfile

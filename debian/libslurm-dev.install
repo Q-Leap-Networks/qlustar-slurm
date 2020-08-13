@@ -1,4 +1,5 @@
 usr/include/slurm/slurm.h
+usr/include/slurm/slurmdb.h
 usr/include/slurm/slurm_errno.h
 usr/include/slurm/smd_ns.h
 usr/include/slurm/spank.h

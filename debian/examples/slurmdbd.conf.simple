@@ -43,14 +43,14 @@ AuthType=auth/munge
 # 		value is 120 seconds.
 #
 # socket        Path   name   to   a   MUNGE   daemon   socket   to  use  (e.g.
-#		"socket=/var/run/munge/munge.socket.2").  The default value  is
-# 		"/var/run/munge/munge.socket.2".    Used   by   auth/munge  and
+#		"socket=/run/munge/munge.socket.2").  The default value  is
+# 		"/run/munge/munge.socket.2".    Used   by   auth/munge  and
 # 		crypto/munge.
 #
 # ttl           Credential lifetime, in seconds (e.g. "ttl=300").  The  default
 # 		value  is  dependent  upon the MUNGE installation, but is typi‐
 # 		cally 300 seconds.
-AuthInfo=/var/run/munge/munge.socket.2
+AuthInfo=/run/munge/munge.socket.2
 
 # DbdHost
 # The  short,  or  long, name of the machine where the Slurm Database Daemon is
@@ -137,7 +137,7 @@ LogFile=/var/log/slurm-llnl/slurmdbd.log
 # logs are written.  The default value is none (performs logging via syslog).
 # See  the  section  LOGGING in the slurm.conf man page if a pathname is speci‐
 # fied.
-PidFile=/var/run/slurm-llnl/slurmdbd.pid
+PidFile=/run/slurm/slurmdbd.pid
 
 # SlurmUser
 # The  name  of the user that the slurmdbd daemon executes as.  This user must

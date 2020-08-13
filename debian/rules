@@ -27,7 +27,7 @@ override_dh_auto_configure:
 	# slurm supports
 	dh_auto_configure -- --libdir=$(MULTIARCHLIBDIR) \
 	  --sysconfdir=/etc/qlustar/common/slurm-llnl \
-	  --localstatedir=/var/run/slurm-llnl --without-rpath \
+	  --localstatedir=/run/slurm --without-rpath \
 	  --with-munge --with-pam_dir=$(PAMDIR) --enable-pam \
 	  --with-pmix=$(MULTIARCHLIBDIR)/pmix --with-hwloc \
 	  --enable-multiple-slurmd --disable-debug 
@@ -72,7 +72,6 @@ override_dh_auto_install:
 
 	# Remove embedded jquery.min.js
 	rm -f debian/tmp/usr/share/doc/slurm-wlm-doc/html/jquery.min.js
-
 
 override_dh_strip:
 	dh_strip -plibslurm35

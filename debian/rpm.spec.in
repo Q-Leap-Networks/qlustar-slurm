@@ -172,7 +172,7 @@ select information.
 %build
 %configure \
 	--sysconfdir=/etc/qlustar/common/slurm-llnl \
-	--localstatedir=/var/run/slurm-llnl \
+	--localstatedir=/run/slurm \
 	--without-rpath \
 	--with-munge \
 	--with-pam_dir=/usr/lib64/security \

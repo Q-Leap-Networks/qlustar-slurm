@@ -68,6 +68,8 @@ case "$1" in
       if grep -q /var/run $slurm_conf; then
         sed -i -e 's,/var/run\(.*\.pid\),/run\1,g' $slurm_conf
       fi
+      # Remove obsolete FastSchedule option in slurm.conf
+      sed -i -e '/FastSchedule/d' $slurm_conf
     ;;
 
     abort-upgrade)

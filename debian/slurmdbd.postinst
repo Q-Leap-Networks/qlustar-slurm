@@ -32,6 +32,13 @@ case "$1" in
       find /etc/rc?.d -name "*20slurmdbd" | xargs rm -f
     ;;
 
+    upgrade)
+      # Migrate /var/run -> /run in slurmdbd.conf
+      if grep -q /var/run $conffile; then
+        sed -i -e 's,/var/run\(.*\.pid\),/run\1,g' $conffile
+      fi
+    ;;
+
     abort-upgrade|abort-remove|abort-deconfigure)
 
     ;;

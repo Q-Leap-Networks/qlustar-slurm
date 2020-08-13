@@ -5,7 +5,7 @@
 #              SLURM (Simple Linux Utility for Resource Management).
 #
 # processname: /usr/sbin/slurmdbd
-# pidfile: /var/run/slurm-llnl/slurmdbd.pid
+# pidfile: /run/slurm/slurmdbd.pid
 #
 # config: /etc/default/slurmdbd
 #
@@ -57,7 +57,7 @@ getpidfile() {
         dpidfile=${dpidfile##*=}
         dpidfile=${dpidfile%#*}
     else
-        dpidfile=/var/run/slurm-llnl/slurmdbd.pid
+        dpidfile=/run/slurm/slurmdbd.pid
     fi
 
     echo $dpidfile
@@ -69,8 +69,8 @@ export LD_LIBRARY_PATH=$LIBDIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 start() {
 
     # Create run-time variable data
-    mkdir -p /var/run/slurm-llnl
-    chown slurm:slurm /var/run/slurm-llnl
+    mkdir -p /run/slurm
+    chown slurm:slurm /run/slurm
 
     unset HOME MAIL USER USERNAME 
     log_daemon_msg "Starting $DESCRIPTION"

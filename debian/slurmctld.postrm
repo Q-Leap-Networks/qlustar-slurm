@@ -20,14 +20,14 @@ set -e
 
 case "$1" in
        purge)
-         rm -rf /var/run/slurm-llnl/slurmctld
+         rm -rf /run/slurm/slurmctld
          rm -rf /var/lib/slurm-llnl/slurmctld
          rm -f /var/log/slurm-llnl/slurmctld*.log*
          if [ ! -e /usr/sbin/slurmd -a ! -e /usr/sbin/slurmdbd ] ; then
             # Killing all slurm owned process
             pkill -9 -u slurm || true
             deluser --quiet slurm || true
-            rm -rf /var/run/slurm-llnl
+            rm -rf /run/slurm
             if [ ! -e /usr/bin/sinfo ] ; then
 	      if which ucf >/dev/null; then
 	        ucf --purge /etc/qlustar/common/slurm-llnl/slurm.conf

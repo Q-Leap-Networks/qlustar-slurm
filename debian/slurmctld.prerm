@@ -18,7 +18,7 @@ set -e
 case "$1" in
     remove|deconfigure)
       # Cancel pending and running jobs on the controller in case of removal
-      if [ -e /var/run/slurm-llnl/slurmctld.pid ] ; then
+      if [ -e /run/slurm/slurmctld.pid ] ; then
         scancel --state=pending
         scancel --state=running
       fi

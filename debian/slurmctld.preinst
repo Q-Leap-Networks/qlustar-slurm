@@ -63,13 +63,6 @@ case "$1" in
         adduser --quiet --system --group --uid 64030 --no-create-home \
                 --home /nonexistent slurm
       fi
-      # Migrate /var/run -> /run in slurm.conf
-      slurm_conf=/etc/qlustar/common/slurm-llnl/slurm.conf
-      if grep -q /var/run $slurm_conf; then
-        sed -i -e 's,/var/run\(.*\.pid\),/run\1,g' $slurm_conf
-      fi
-      # Remove obsolete FastSchedule option in slurm.conf
-      sed -i -e '/FastSchedule/d' $slurm_conf
     ;;
 
     abort-upgrade)

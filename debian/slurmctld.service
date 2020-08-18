@@ -10,6 +10,10 @@ EnvironmentFile=-/etc/default/slurmctld
 ExecStart=/usr/sbin/slurmctld $SLURMCTLD_OPTIONS
 ExecReload=/bin/kill -HUP $MAINPID
 PIDFile=/run/slurm/slurmctld.pid
+User=slurm
+Group=slurm
+RuntimeDirectory=slurm
+RuntimeDirectoryPreserve=yes
 
 [Install]
 WantedBy=multi-user.target

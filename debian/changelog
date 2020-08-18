@@ -1,9 +1,10 @@
-slurm-llnl (20.02.4-ql.1) stable; urgency=medium
+slurm-llnl (20.02.4-ql.2) stable; urgency=medium
 
   * New upstream release
   * Sync d/dir with upstream debian 19.05.5-1
+  * Use RuntimeDirectory systemd directive instead of tmpfiles
 
- -- Roland Fehrenbacher <rf@q-leap.de>  Thu, 13 Aug 2020 13:16:45 +0000
+ -- Roland Fehrenbacher <rf@q-leap.de>  Tue, 18 Aug 2020 12:17:10 +0000
 
 slurm-llnl (18.08.8-ql.2) stable; urgency=medium
 

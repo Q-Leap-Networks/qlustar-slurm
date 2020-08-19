@@ -1,6 +1,6 @@
 [Unit]
 Description=Slurm controller daemon
-After=network.target munge.service nis.service
+After=network.target nss-lookup.target munge.service slurmdbd.service
 ConditionPathExists=/etc/qlustar/common/slurm-llnl/slurm.conf
 Documentation=man:slurmctld(8)
 

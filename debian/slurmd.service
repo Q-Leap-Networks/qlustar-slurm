@@ -14,8 +14,6 @@ KillMode=process
 LimitNOFILE=51200
 LimitMEMLOCK=infinity
 LimitSTACK=infinity
-User=slurm
-Group=slurm
 RuntimeDirectory=slurm
 RuntimeDirectoryPreserve=yes
 

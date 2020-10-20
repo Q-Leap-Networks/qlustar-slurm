@@ -1,3 +1,9 @@
+slurm-llnl (20.02.5-ql.1) stable; urgency=medium
+
+  * New upstream release
+
+ -- Roland Fehrenbacher <rf@q-leap.de>  Tue, 20 Oct 2020 20:05:22 +0200
+
 slurm-llnl (20.02.4-ql.4) stable; urgency=medium
 
   * New upstream release

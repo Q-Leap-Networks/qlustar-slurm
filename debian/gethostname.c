@@ -54,6 +54,7 @@ int gethostname(char *name, size_t len) {
     // open conffile and get hostname
     char line[1024];
     strncat(path, SLURMCONF, PATH_MAX);
+    // fprintf(stderr, "Using '%s' as slurm config path\n", path);
     FILE *file = fopen(path,"r");
 
     if(file == NULL) {
@@ -61,7 +62,8 @@ int gethostname(char *name, size_t len) {
       return -1;
     }
     while (fgets(line,sizeof(line),file) != NULL) {
-      if(strncasecmp(line,"ControlMachine=",15) == 0) {
+      if( (strncasecmp(line,"ControlMachine=",15) == 0) ||
+	  (strncasecmp(line,"SlurmctldHost=",14) == 0)) {
 	char *ptr = strtok(line,"=\n");
 	ptr = strtok(NULL,"=\n");
 	snprintf(hostname, HOST_NAME_MAX, "%s", ptr);	
@@ -71,7 +73,7 @@ int gethostname(char *name, size_t len) {
     fclose(file);
 
     if (hostname[0] == 0) {
-      fprintf(stderr, "ControlMachine option missing in '%s'\n", path);
+      fprintf(stderr, "None of 'SlurmctldHost' or 'ControlMachine' options are defined '%s'\n", path);
       return EINVAL;
     }
   }

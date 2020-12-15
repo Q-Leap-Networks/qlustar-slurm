@@ -182,11 +182,6 @@ select information.
 	--disable-debug 
 	%{?_with_cflags}
 
-%if 0%{?centos} > 7
-# CentOS 8 has python2 rather than python
-sed -i -e 's/env python/env python2/g' doc/html/shtml2html.py doc/man/man2html.py
-%endif
-
 make %{?_smp_mflags}
 
 %install

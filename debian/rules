@@ -73,6 +73,11 @@ override_dh_auto_install:
 	# Remove embedded jquery.min.js
 	rm -f debian/tmp/usr/share/doc/slurm-wlm-doc/html/jquery.min.js
 
+	# MariaDB conf for slurmdbd
+	mkdir -p debian/tmp/etc/mysql/mariadb.conf.d
+	cp debian/mariadb.conf \
+	  debian/tmp/etc/mysql/mariadb.conf.d/60-server-slurm.cnf
+
 override_dh_strip:
 	dh_strip -plibslurm35
 	dh_strip -plibpmi0

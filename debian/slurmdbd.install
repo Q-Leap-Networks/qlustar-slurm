@@ -1,2 +1,3 @@
 usr/bin/sacctmgr
 usr/sbin/slurmdbd
+etc/mysql/mariadb.conf.d/60-server-slurm.cnf

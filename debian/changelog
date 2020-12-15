@@ -1,3 +1,10 @@
+slurm-llnl (20.02.6-ql.1) stable; urgency=medium
+
+  * New upstream release
+  * Add optimized mariadb config for slurmdbd
+
+ -- Roland Fehrenbacher <rf@q-leap.de>  Tue, 15 Dec 2020 09:30:35 +0000
+
 slurm-llnl (20.02.5-ql.2) stable; urgency=medium
 
   * New upstream release

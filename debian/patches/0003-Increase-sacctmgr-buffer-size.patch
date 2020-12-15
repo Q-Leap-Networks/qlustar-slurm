@@ -10,7 +10,7 @@ with more than 4096 which is too small in some cases.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/sacctmgr/file_functions.c b/src/sacctmgr/file_functions.c
-index 664a0f3..217a960 100644
+index 78ff210..e51d5c0 100644
 --- a/src/sacctmgr/file_functions.c
 +++ b/src/sacctmgr/file_functions.c
 @@ -42,7 +42,7 @@

@@ -193,7 +193,7 @@ make install DESTDIR=%{buildroot}
 make install-contrib DESTDIR=%{buildroot}
 
 install -D -m644 etc/slurmd.service    %{buildroot}/%{_unitdir}/slurmd.service
-sed -i -e 's,slurmd.pid,slurm-llnl/slurmd.pid,g' %{buildroot}/%{_unitdir}/slurmd.service
+sed -i -e 's,/var/run,/run/slurm,g' %{buildroot}/%{_unitdir}/slurmd.service
 mkdir -p %{buildroot}/var/log/slurm-llnl %{buildroot}/var/lib/slurm-llnl/slurmd %{buildroot}/var/lib/slurm-llnl/checkpoint
 
 rm -f contribs/cray/opt_modulefiles_slurm

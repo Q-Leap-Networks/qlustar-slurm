@@ -2,3 +2,4 @@
 0002-Look-for-freeipmi-libs-in-the-correct-places-on-Debi.patch
 0003-Increase-sacctmgr-buffer-size.patch
 0004-Fix-default-pidfile-paths.patch
+0005-slurmd.service.in-Make-sure-slurm-starts-only-when-L.patch

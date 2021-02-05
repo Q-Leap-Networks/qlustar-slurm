@@ -1,3 +1,10 @@
+slurm-llnl (20.02.6-ql.2) stable; urgency=medium
+
+  * Start slurmd after systemd-user-sessions.service to make
+    sure LDAP users (via sssd) are seen
+
+ -- Roland Fehrenbacher <rf@q-leap.de>  Tue, 15 Dec 2020 09:30:35 +0000
+
 slurm-llnl (20.02.6-ql.1) stable; urgency=medium
 
   * New upstream release

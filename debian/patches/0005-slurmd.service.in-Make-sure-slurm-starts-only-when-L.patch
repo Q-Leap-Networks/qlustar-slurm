@@ -1,0 +1,21 @@
+From: Roland Fehrenbacher <rf@q-leap.de>
+Date: Fri, 5 Feb 2021 10:37:44 +0000
+Subject: slurmd.service.in: Make sure slurm starts only when LDAP users are
+ seen
+
+---
+ etc/slurmd.service.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/etc/slurmd.service.in b/etc/slurmd.service.in
+index f86fcd8..be1cf05 100644
+--- a/etc/slurmd.service.in
++++ b/etc/slurmd.service.in
+@@ -1,6 +1,6 @@
+ [Unit]
+ Description=Slurm node daemon
+-After=munge.service network.target remote-fs.target
++After=munge.service network.target remote-fs.target systemd-user-sessions.service
+ #ConditionPathExists=@sysconfdir@/slurm.conf
+ 
+ [Service]
